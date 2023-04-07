@@ -123,15 +123,49 @@ For getting a better understanding of the dataset we work with, we decided to co
 
     An opening is considered successful if `White` wins.
 
+    **NOTE:** To remove outliers, we excluded any opening played less than `20` times.
+
     | Opening | `White` win Rate |
     |--------|--------------------------|
+    | King's Pawn | 82.7160% |
+    | Italian Game: Two Knights Defense, Fried Liver Attack | 74.6667% |
+    | Bishop's Opening: Ponziani Gambit | 72.9730% |
+    | Slav Defense: Schlechter Variation | 72.4138% |
+    | Modern Defense: Bishop Attack | 72.0000% |
+    | Queen's Gambit Accepted: Central Variation, Modern Defense | 69.5652% |
+    | Ruy Lopez: Berlin Defense | 69.5652% |
+    | Scotch Game: Haxo Gambit | 69.3878% |
+    | Sicilian Defense: Closed Variation, Fianchetto Variation | 68.9655% |
+    | Sicilian Defense: O'Kelly Variation, Normal System | 68.7500% |
+    | Russian Game: Damiano Variation | 68.4211% |
+    | Sicilian Defense: Alapin Variation, Smith-Morra Declined | 68.1818% |
+    | Caro-Kann Defense: Advance Variation, Van der Wiel Attack | 68.1818% |
+    | Danish Gambit Accepted | 67.6471% |
+    | Queen's Gambit Refused: Baltic Defense, Pseudo-Slav | 67.6471% |
 
 6. Most successful openings for `Black`:
 
     An opening is considered successful if `Black` wins.
 
+    **NOTE:** To remove outliers, we excluded any opening played less than `20` times.
+
     | Opening | `Black` win Rate |
     |--------|--------------------------|
+    | Not Known Opening | 97.7099% |
+    | Caro-Kann Defense: Advance Variation, Bayonet Attack | 73.0769% |
+    | Alekhine Defense: Two Pawn Attack, Lasker Variation | 66.6667% |
+    | English Opening: Anglo-Dutch Defense | 66.6667% |
+    | Zukertort Opening: Old Indian Attack | 66.1972% |
+    | Philidor Defense: Lion Variation | 65.5172% |
+    | Bird Opening: Williams Gambit | 65.5172% |
+    | King's Gambit, Falkbeer Countergambit, Blackburne Attack | 64.0000% |
+    | Clemenz Opening | 63.6364% |
+    | Sicilian Defense: Drazic Variation | 63.6364% |
+    | Budapest Defense: Adler Variation | 62.7451% |
+    | Bishop's Opening: Vienna Hybrid, Spielmann Attack | 62.5000% |
+    | Blumenfeld Countergambit #2 | 62.5000% |
+    | Ware Opening | 62.2951% |
+    | Van Geet Opening: Dunst-Perrenet Gambit | 61.9048% |
 
 Note that the data shown above is skewed, as it is not adjusted to the type of time control. This is one of the main issues that our project aims to address. 
 
