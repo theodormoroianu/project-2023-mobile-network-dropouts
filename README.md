@@ -59,7 +59,7 @@ In order to showcase a handful of insights about our data, we decided that a sma
 
 For getting a better understanding of the dataset we work with, we decided to compute a few basic statistics:
 
-1. Number of games: `11348506`.
+1. Number of games: `11,348,506`.
 2. Most popular time controls:
 
     | Frequency | Time Control (Initial Time + Increment) |
