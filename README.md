@@ -62,18 +62,78 @@ For getting a better understanding of the dataset we work with, we decided to co
 1. Number of games: `11348506`.
 2. Most popular time controls:
 
-| Frequency | Time Control (Initial Time + Increment) |
-|----------|---------------------|
-| 11.686% | 300+0 |
-| 9.088000000000001% | 180+0 |
-| 8.706% | 600+0 |
-| 7.8839999999999995% | 60+0 |
-| 2.202% | 180+2 |
-| 1.7670000000000001% | 300+3 |
-| 1.4489999999999998% | 120+1 |
-| 1.314% | 30+0 |
-| 1.3% | 15+0 |
-| 0.968% | 120+0 |
+    | Frequency | Time Control (Initial Time + Increment) |
+    |----------|---------------------|
+    | 21.1114% | 300+0 |
+    | 16.5227% | 180+0 |
+    | 15.6196% | 600+0 |
+    | 14.2277% | 60+0 |
+    | 3.7259% | 180+2 |
+    | 3.1211% | 300+3 |
+    | 2.6619% | 120+1 |
+    | 2.2736% | 15+0 |
+    | 2.1730% | 30+0 |
+    | 1.7505% | 120+0 |
+
+3. Number of games played per ELO Bucket:
+
+    | Averge of players' ELO | Percentage of all Games |
+    |---------------------|--------------------|
+    | 800 - 807 | 0.0675% |
+    | 900 - 908 | 0.4154% |
+    | 1000 - 1009 | 1.4037% |
+    | 1100 - 1110 | 3.1400% |
+    | 1200 - 1211 | 5.7084% |
+    | 1300 - 1312 | 8.8046% |
+    | 1400 - 1413 | 11.9280% |
+    | 1500 - 1514 | 14.4857% |
+    | 1600 - 1615 | 14.5307% |
+    | 1700 - 1716 | 13.6975% |
+    | 1800 - 1817 | 11.1907% |
+    | 1900 - 1918 | 7.1985% |
+    | 2000 - 2019 | 4.0999% |
+    | 2100 - 2120 | 1.6996% |
+    | 2200 - 2221 | 1.0285% |
+    | 2300 - 2322 | 0.4296% |
+    | 2400 - 2423 | 0.1290% |
+    | 2500 - 2524 | 0.0343% |
+    | 2600 - 2625 | 0.0083% |
+
+4. Most frequent openings:
+
+    | Opening | Percentage of all Games |
+    |--------|--------------------------|
+    | 2.0843% | Van't Kruijs Opening |
+    | 1.8452% | Scandinavian Defense: Mieses-Kotroc Variation |
+    | 1.7103% | Modern Defense |
+    | 1.4866% | Horwitz Defense |
+    | 1.4156% | French Defense: Knight Variation |
+    | 1.4002% | Sicilian Defense |
+    | 1.2925% | Scandinavian Defense |
+    | 1.2842% | Caro-Kann Defense |
+    | 1.1481% | Owen Defense |
+    | 1.1362% | Philidor Defense #3 |
+    | 1.0960% | Sicilian Defense: Bowdler Attack |
+    | 1.0546% | Queen's Pawn Game #2 |
+    | 1.0120% | Scotch Game |
+    | 0.9741% | Queen's Pawn |
+    | 0.9658% | Hungarian Opening |
+
+5. Most successful openings for `White`:
+
+    An opening is considered successful if `White` wins.
+
+    | Opening | `White` win Rate |
+    |--------|--------------------------|
+
+6. Most successful openings for `Black`:
+
+    An opening is considered successful if `Black` wins.
+
+    | Opening | `Black` win Rate |
+    |--------|--------------------------|
+
+Note that the data shown above is skewed, as it is not adjusted to the type of time control. This is one of the main issues that our project aims to address. 
 
 ### Related work
 
