@@ -55,6 +55,26 @@ If successful, this data visualization project could provide insights into the s
 > Pre-processing of the data set you chose
 > - Show some basic statistics and get insights about the data
 
+In order to showcase a handful of insights about our data, we decided that a smaller dataset with a similar distribution is sufficient. To be precise, for this task we analyzed the games from Lichess played in April 2017, as the size of the dataset is quite small, and we found similar work using the same sample. This will further be discussed in the “Related Work” section.
+
+For getting a better understanding of the dataset we work with, we decided to compute a few basic statistics:
+
+1. Number of games: `11348506`.
+2. Most popular time controls:
+
+| Frequency | Time Control (Initial Time + Increment) |
+|----------|---------------------|
+| 11.686% | 300+0 |
+| 9.088000000000001% | 180+0 |
+| 8.706% | 600+0 |
+| 7.8839999999999995% | 60+0 |
+| 2.202% | 180+2 |
+| 1.7670000000000001% | 300+3 |
+| 1.4489999999999998% | 120+1 |
+| 1.314% | 30+0 |
+| 1.3% | 15+0 |
+| 0.968% | 120+0 |
+
 ### Related work
 
 
