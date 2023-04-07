@@ -167,7 +167,8 @@ For getting a better understanding of the dataset we work with, we decided to co
     | Ware Opening | 62.2951% |
     | Van Geet Opening: Dunst-Perrenet Gambit | 61.9048% |
 
-Note that the data shown above is skewed, as it is not adjusted to the type of time control. This is one of the main issues that our project aims to address. 
+
+**Note:** that the data shown above is skewed, as it is not adjusted to the type of time control. This is one of the main issues that our project aims to address. 
 
 ### Related work
 
