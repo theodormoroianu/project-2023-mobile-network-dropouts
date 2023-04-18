@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  let [val, setVal] = useState("");
+  fetch("/api/test").then(response =>
+    response.text().then(x => {
+      setVal(x);
+      console.log("Received answer!")
+    }));
+  
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
+          <br/>
+          {val}
         </p>
         <a
           className="App-link"

@@ -1,2 +1,3 @@
 data/
 lichess_db_standard_rated_2017-04.pgn
+__pycache__/
