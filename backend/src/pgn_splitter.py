@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 """
+!!! THIS IS NOT REALLY PART OF THE PROJECT. THIS FILE IS BEING USED BY THE `GENERATE_DATASET.SH` FILE.
 Splits a large pgn file into smaller chunks
 """
 
