@@ -47,7 +47,7 @@ pzstd -d ${DATASET_NAME}.zst
 
 # split the archive
 echo "Splitting the archive..."
-python3 ../src/pgn_splitter.py "$DATASET_NAME" . 1000 "${DATASET_NAME}-chunk"
+python3 ../src/pgn_splitter.py "$DATASET_NAME" . 30000 "${DATASET_NAME}-chunk"
 
 # delete the archive if user wants to
 while true; do
