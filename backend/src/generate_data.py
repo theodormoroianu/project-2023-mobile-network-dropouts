@@ -63,12 +63,16 @@ def download_and_split_dataset():
             raise f"Unable to wget: got ret_code of {ret_code}"
     
     # extract the dataset if not already extracted
-    if not os.path.exists(f"{DOWNLOAD_PATH}{DATASET_NAME}.zst"):
+    if not os.path.exists(f"{DOWNLOAD_PATH}{DATASET_NAME}"):
         print(f"Extracting archive...")
         os.system(f"pzstd -d {DOWNLOAD_PATH}{DATASET_NAME}.zst -o {DOWNLOAD_PATH}/{DATASET_NAME}")
     
     # split into chunks
     split_dataset()
+
+    # delete archive and db
+    os.remove(f"{DOWNLOAD_PATH}{DATASET_NAME}")
+    os.remove(f"{DOWNLOAD_PATH}{DATASET_NAME}.zst")
 
 def compute_stats():
     pass
