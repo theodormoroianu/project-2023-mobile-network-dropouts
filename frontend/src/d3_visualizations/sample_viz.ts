@@ -5,7 +5,7 @@ const margin = {top: 80, right: 25, bottom: 30, left: 40},
   width = 450 - margin.left - margin.right,
   height = 450 - margin.top - margin.bottom;
 
-export const ShowSampleViz = (selector: string) => {
+export const SampleViz = (selector: string) => {
 // append the svg object to the body of the page
 const svg = d3.select(selector)
 .append("svg")
@@ -48,7 +48,7 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/he
     .domain([1,100])
 
   // create a tooltip
-  const tooltip = d3.select("#my_dataviz")
+  const tooltip = d3.select(selector)
     .append("div")
     .style("opacity", 0)
     .attr("class", "tooltip")

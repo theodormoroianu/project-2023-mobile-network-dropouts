@@ -45,7 +45,7 @@ def main():
         generate_data.generate_data()
     elif args.command == "clean":
         try:
-            shutil.rmtree(generate_data.DOWNLOAD_PATH)
+            shutil.rmtree(generate_data.DOWNLOAD_PATH) # TODO: IS THIS OK?
         except:
             pass
     else:
