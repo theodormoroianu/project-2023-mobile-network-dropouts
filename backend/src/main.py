@@ -6,6 +6,7 @@ import argparse
 import sys
 import generate_data
 import shutil
+import storage
 
 def start_flask_app():
     print(f"Starting flask app...")
@@ -45,9 +46,10 @@ def main():
         generate_data.generate_data()
     elif args.command == "clean":
         try:
-            shutil.rmtree(generate_data.DOWNLOAD_PATH) # TODO: IS THIS OK?
+            shutil.rmtree(storage.DATA_PATH)
+            print("Data deleted.")
         except:
-            pass
+            print("Unable to delete data (maybe it is already clean?).")
     else:
         raise "Unexpected command."
     

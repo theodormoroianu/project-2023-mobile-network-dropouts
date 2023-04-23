@@ -4,6 +4,7 @@ import SamplePage from './sample_page';
 import ApiTest from './api_test';
 import D3Wrapper from './d3_wrapper';
 import { SampleViz } from '../d3_visualizations/sample_viz';
+import { EloGamesDistributionViz } from '../d3_visualizations/elo_games_distribution_viz';
 
 function Root() {
     // stores the view we want to display
@@ -18,6 +19,7 @@ function Root() {
                         <Button className={Classes.MINIMAL} icon="home" text="Home" onClick={() => setView("sample_page")} />
                         <Button className={Classes.MINIMAL} icon="document" text="D3 Sample" onClick={() => setView("d3_sample")} />
                         <Button className={Classes.MINIMAL} icon="settings" text="Test API" onClick={() => setView("api_test")} />
+                        <Button className={Classes.MINIMAL} icon="settings" text="Basic ELO Games" onClick={() => setView("elo_games_distribution")} />
                     </NavbarGroup>
                 </Navbar>
                 <div>
@@ -25,6 +27,7 @@ function Root() {
                     {view === "sample_page" && <SamplePage />}
                     {view === "api_test" && <ApiTest />}
                     {view === "d3_sample" && <D3Wrapper D3Renderer={SampleViz} />}
+                    {view === "elo_games_distribution" && <D3Wrapper D3Renderer={EloGamesDistributionViz} />}
                 </div>
             </div>
     );
