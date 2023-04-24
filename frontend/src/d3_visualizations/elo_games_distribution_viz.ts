@@ -2,9 +2,9 @@ import * as d3 from 'd3';
 import { FetchBasicEloGameStats } from '../api/stats_api';
 
 // set the dimensions and margins of the graph
-const margin = { top: 80, right: 25, bottom: 30, left: 40 },
-    width = 450 - margin.left - margin.right,
-    height = 450 - margin.top - margin.bottom;
+const margin = { top: 80, right: 50, bottom: 90, left: 40 },
+    width = 950 - margin.left - margin.right,
+    height = 470 - margin.top - margin.bottom;
 
 export const EloGamesDistributionViz = (querySelector: string) => {
     FetchBasicEloGameStats().then(data => {
@@ -25,32 +25,34 @@ export const EloGamesDistributionViz = (querySelector: string) => {
 
         var g = svg.append("g")
             .attr("transform", "translate(" + 100 + "," + 100 + ")");
-
-            xScale.domain(data.map((d) => `${d.elo_min}-${d.elo_max}`));
-            yScale.domain([0, d3.max(data, (d) => d.nr_games)??0]);
+        
+        xScale.domain(data.map((d) => `${d.elo_min}-${d.elo_max}`));
+        yScale.domain([0, d3.max(data, (d) => d.nr_games)??0]);
 
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale))
-            .append("text")
-            .attr("y", height - 250)
+            .selectAll("text")
+            .attr("transform", "rotate(-30) translate(-10,5)");
+
+        g.append("text")
+            .attr("y", height + 50)
             .attr("x", width - 100)
             .attr("text-anchor", "end")
             .attr("stroke", "black")
-            .text("Year");
+            .text("Player ELOs");
 
         g.append("g")
             .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                return "$" + d;
-            })
-                .ticks(10))
+                return d + "%";
+            }).ticks(10))
             .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", "-5.1em")
             .attr("text-anchor", "end")
             .attr("stroke", "black")
-            .text("Stock Price");
+            .text("Percentage of Games");
 
         g.selectAll(".bar")
             .data(data)
@@ -60,5 +62,6 @@ export const EloGamesDistributionViz = (querySelector: string) => {
             .attr("y", (d) => yScale(d.nr_games))
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => height - yScale(d.nr_games))
+            .attr("fill", "blue")
     }).catch(err => console.log(err));
 }
