@@ -72,6 +72,9 @@ export const SampleViz = (selector: string) => {
                 .style("left", (event.x) / 2 + "px")
                 .style("top", (event.y) / 2 + "px")
         }
+        const mouseclick = function (event: any, d: any) {
+            console.log("Click detected on ", d.value, d);
+        }
         const mouseleave = function (this: any, event: any, d: any) {
             tooltip
                 .style("opacity", 0)
@@ -95,6 +98,7 @@ export const SampleViz = (selector: string) => {
             .style("stroke", "none")
             .style("opacity", 0.8)
             .on("mouseover", mouseover)
+            .on("click", mouseclick)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave)
     })
