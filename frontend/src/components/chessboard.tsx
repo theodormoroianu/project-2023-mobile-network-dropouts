@@ -7,18 +7,18 @@ interface ChessBoardViewProps {
 };
 
 /** Shows a chessboard, whose content can be set by using the exposed callback. */
-function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) {
+export function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) {
     const mountedRef = useRef(false) 
     // quick and dirty way to generate a random ID
     const ref = useRef<HTMLDivElement>(null);
-    let [fen, setFen] = useState("rn2k1r1/ppp1pp1p/3p2p1/5bn1/P7/2N2B2/1PPPPP2/2BNK1RR");
+    let [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     let [chessboard, setChessboard] = useState<ReturnType<typeof Chessground> | null>(null);
 
     // Mount the chessboard.
     useEffect(() => {
         if (!mountedRef.current) {
             mountedRef.current = true;
-            const c = Chessground(ref.current as HTMLDivElement, {fen: "rn2k1r1/ppp1pp1p/3p2p1/5bn1/P7/2N2B2/1PPPPP2/2BNK1RR"});
+            const c = Chessground(ref.current as HTMLDivElement, {fen: fen});
             setChessboard(c);
             // Set callback.
             setBoardStateCallback(setFen);
@@ -28,7 +28,7 @@ function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) {
     // // Answer to fen updates.
     useEffect(() => {
         chessboard?.set({ fen: fen });
-    }, [fen]);
+    }, [fen, chessboard]);
 
 
     return <div ref={ref} style={{"height": "500px", "width": "500px"}}></div>;
@@ -76,21 +76,5 @@ function ChessBoard() {
         </div>
     </div>
 }
-
-// function ChessBoard() {
-//     const mountedRef = useRef(false) 
-//     // quick and dirty way to generate a random ID
-//     const ref = useRef<HTMLDivElement>(null);
-
-//     useEffect(() => {
-//         if (!mountedRef.current) {
-//             mountedRef.current = true;
-//             const ground = Chessground(ref.current as HTMLDivElement, {fen: "rn2k1r1/ppp1pp1p/3p2p1/5bn1/P7/2N2B2/1PPPPP2/2BNK1RR"});
-//             console.log("Done")
-
-//         }
-//     });
-//     return <div ref={ref} style={{"height": "500px", "width": "500px"}}></div>;
-// }
 
 export default ChessBoard;
