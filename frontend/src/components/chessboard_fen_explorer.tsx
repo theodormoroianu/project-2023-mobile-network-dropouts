@@ -6,62 +6,72 @@ import { FetchDummyFens } from '../api/fens_api';
 
 interface ChessBoardFenPickerProps {
     setFen: (fen: string) => void
+    // The function returns the list of fens, and the index of the first fen to display.
+    fensToDisplay: Promise <[string[], number]>
 };
 
 /** Allows the user to select a FEN. */
-function ChessBoardFenPicker({ setFen } : ChessBoardFenPickerProps) {
+function ChessBoardFenPicker({ setFen, fensToDisplay } : ChessBoardFenPickerProps) {
     let [fens, setFens] = useState<string[]>([]);
     let [currentMove, setCurrentMove] = useState(0);
 
     // fetch dummy fens
     useEffect(() => {
-        FetchDummyFens().then((fens) => {
+        fensToDisplay.then(([fens, initialFenId]) => {
             setFens(fens);
-            console.log("Set fens: ", fens);
-            if (fens.length > 0)
-                setFen(fens[0]);
+            console.log("Loaded " + fens.length + " fens.");
+            if (fens.length > 0) {
+                setFen(fens[initialFenId]);
+                setCurrentMove(initialFenId);
+            }
         });
-    }, []);
+    }, [fensToDisplay, setFen]);
 
     if (fens.length === 0)
-        return <p>Unable to fetch fens!</p>
+        return <p>No moves are available!</p>
 
-    return <div>
-        <p>Move through moves:</p>
-        <div>
-            <Button onClick={() => {
+    return <div style={{"width": "100%"}}>
+            <Button active={!(currentMove > 0 && fens.length > 0)} onClick={() => {
                 if (currentMove > 0) {
                     setFen(fens[currentMove - 1]);
                     setCurrentMove(currentMove - 1);
                 }
-            }}>
-                Prev
+            }} style={{"width": "50%"}}>
+                Previous Move
             </Button>
-            <Button onClick={() => {
+            <Button active={!(currentMove + 1 < fens.length)} onClick={() => {
                 if (currentMove + 1 < fens.length) {
                     setFen(fens[currentMove + 1]);
                     setCurrentMove(currentMove + 1);
                 }
-            }}>
-                Next
+            }} style={{"width": "50%"}}>
+                Next Move
             </Button>
-        </div>
         </div>
 }
 
+interface ChessBoardFenExplorerProps {
+    // Function to call in order to get fens to display, e.g. this function can be an API call.
+    // The function returns the list of fens, and the index of the first fen to display.
+    fensToDisplay: Promise <[string[], number]>
+};
 
-function ChessBoardFenExplorer() {
+function ChessBoardFenExplorer({ fensToDisplay }: ChessBoardFenExplorerProps) {
     let [fenCallback, setFenCallback] = useState<(fen: string) => void>(() => (value: string) => {
         console.log(`Ignored request for ${value} as callback was not registered!`);
     });
 
-    return <div style={{"display": "flex", "flexDirection": "row"}}>
-        <div style={{"padding": "30px", "width": "500px"}}>
-            <ChessBoardFenPicker setFen={fenCallback} />
-        </div>
-        <div style={{"padding": "30px"}}>
+    fensToDisplay.then((fens) => console.log(fens));
+    console.log("received as fens: " + fensToDisplay);
+
+    return <div style={{
+            "display": "flex",
+            "flexDirection": "column",
+            "justifyContent": "center",
+            "padding": "30px",
+            "width": "500px"}}>
             <ChessBoardView setBoardStateCallback={(x) => setFenCallback(() => x)} />
-        </div>
+            <ChessBoardFenPicker setFen={fenCallback} fensToDisplay={fensToDisplay} />
     </div>
 }
 

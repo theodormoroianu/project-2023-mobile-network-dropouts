@@ -23,7 +23,7 @@ export function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) 
             // Set callback.
             setBoardStateCallback(setFen);
         }
-    }, []);
+    }, [fen, setBoardStateCallback]);
 
     // // Answer to fen updates.
     useEffect(() => {
@@ -31,7 +31,7 @@ export function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) 
     }, [fen, chessboard]);
 
 
-    return <div ref={ref} style={{"height": "500px", "width": "500px"}}></div>;
+    return <div ref={ref} style={{"width": "100%", "aspectRatio": "1/1"}}></div>;
 }
 
 
@@ -71,7 +71,7 @@ function ChessBoard() {
         <div style={{"padding": "30px"}}>
             <ChessBoardFenSelector setFen={fenCallback} />
         </div>
-        <div style={{"padding": "30px"}}>
+        <div style={{"padding": "30px", "width": "400px"}}>
             <ChessBoardView setBoardStateCallback={useCallback((x) => setFenCallback(() => x), [])} />
         </div>
     </div>

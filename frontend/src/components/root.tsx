@@ -7,6 +7,8 @@ import { SampleViz } from '../d3_visualizations/sample_viz';
 import { EloGamesDistributionViz } from '../d3_visualizations/elo_games_distribution_viz';
 import ChessBoard from './chessboard';
 import ChessBoardFenExplorer from './chessboard_fen_explorer';
+import { FetchDummyFens } from '../api/fens_api';
+import { D3WithChessBoardDemo } from './d3_with_chessboard_demo';
 
 function Root() {
     // stores the view we want to display
@@ -24,6 +26,7 @@ function Root() {
                         <Button className={Classes.MINIMAL} icon="settings" text="Basic ELO Games" onClick={() => setView("elo_games_distribution")} />
                         <Button className={Classes.MINIMAL} icon="settings" text="Chess Board" onClick={() => setView("chessboard")} />
                         <Button className={Classes.MINIMAL} icon="settings" text="Chess Board With Fen" onClick={() => setView("chessboard_fen")} />
+                        <Button className={Classes.MINIMAL} icon="settings" text="D3 Chessboard" onClick={() => setView("d3_chess")} />
                     </NavbarGroup>
                 </Navbar>
                 <div>
@@ -33,7 +36,9 @@ function Root() {
                     {view === "d3_sample" && <D3Wrapper D3Renderer={SampleViz} />}
                     {view === "elo_games_distribution" && <D3Wrapper D3Renderer={EloGamesDistributionViz} />}
                     {view === "chessboard" && <ChessBoard />}
-                    {view === "chessboard_fen" && <ChessBoardFenExplorer />}
+                    {view === "chessboard_fen" && <ChessBoardFenExplorer
+                            fensToDisplay={FetchDummyFens().then(fens => [fens, 0])} />}
+                    {view === "d3_chess" && <D3WithChessBoardDemo />}
                 </div>
             </div>
     );
