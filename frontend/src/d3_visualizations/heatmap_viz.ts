@@ -1,16 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-
 import * as d3 from 'd3';
 import { FetchDummyFens } from '../api/fens_api';
-import D3Wrapper from './d3_wrapper';
-import ChessBoardFenExplorer from './chessboard_fen_explorer';
 
 // set the dimensions and margins of the graph
 const margin = { top: 80, right: 25, bottom: 30, left: 40 },
     width = 450 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
 
-export const d3Viz = (selector: string, setFens: (fens: Promise <[string[], number]>) => void) => {
+export const HeatMapViz = (selector: string, setFens: (fens: Promise <[string[], number]>) => void) => {
     // append the svg object to the body of the page
     const svg = d3.select(selector)
         .append("svg")
@@ -127,19 +123,3 @@ export const d3Viz = (selector: string, setFens: (fens: Promise <[string[], numb
         .style("max-width", 400)
         .text("A short description of the take-away message of this chart.");
 }
-
-export const D3WithChessBoardDemo = () => {
-    // initially, fensToDisplay is an empty promise (a promise that resolves to nothing).
-    const [fensToDisplay, setFensToDisplay] = useState<Promise<[string[], number]>>(new Promise(() => [[], 0]));
-    
-    return <div style={{
-        "padding": "30px",
-        "display": "flex",
-        "flexDirection": "row"
-        }}>
-        <D3Wrapper D3Renderer={(selector) => d3Viz(selector, (p => { console.log("Received " + p); setFensToDisplay(p);}))} />
-        <ChessBoardFenExplorer fensToDisplay={fensToDisplay} />
-    </div>;
-}
-
-export default D3Wrapper;

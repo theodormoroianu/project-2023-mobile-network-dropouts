@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chessground } from 'chessground';
-import { Button, EditableText, FormGroup } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 interface ChessBoardViewProps {
     setBoardStateCallback: (callback: (fen: string) => void) => void
 };
 
 /** Shows a chessboard, whose content can be set by using the exposed callback. */
-export function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) {
+const ChessBoardView = ({ setBoardStateCallback } : ChessBoardViewProps) => {
     const mountedRef = useRef(false) 
     // quick and dirty way to generate a random ID
     const ref = useRef<HTMLDivElement>(null);
@@ -35,46 +35,74 @@ export function ChessBoardView({ setBoardStateCallback } : ChessBoardViewProps) 
 }
 
 
-interface ChessFenSelectorProps {
+interface ChessBoardFenPickerProps {
     setFen: (fen: string) => void
+    // The function returns the list of fens, and the index of the first fen to display.
+    fensToDisplay: Promise <[string[], number]>
 };
 
-/** Allows the user to select a FEN. */
-function ChessBoardFenSelector({ setFen } : ChessFenSelectorProps) {
-    let [value, setValue] = useState("");
-    console.log("Received setFen of ", setFen);
+/** Allows the user to select a FEN, given a list of moves in a game. */
+const ChessBoardFenPicker = ({ setFen, fensToDisplay } : ChessBoardFenPickerProps) => {
+    let [fens, setFens] = useState<string[]>([]);
+    let [currentMove, setCurrentMove] = useState(0);
 
-    return <div>
-        <FormGroup
-    // helperText="FEN Input..."
-    // label="Label A"
-    // labelFor="text-input"
-    // labelInfo="(required)"
->
-    {/* <InputGroup id="text-input" placeholder="Placeholder text" /> */}
-        <EditableText minWidth={1000} onChange={setValue} />
-        <br />
-        <br />
-        
-        <Button onClick={() => setFen(value)}>Update FEN</Button>
-</FormGroup>
-    </div>
+    // fetch dummy fens
+    useEffect(() => {
+        fensToDisplay.then(([fens, initialFenId]) => {
+            setFens(fens);
+            console.log("Loaded " + fens.length + " fens.");
+            if (fens.length > 0) {
+                setFen(fens[initialFenId]);
+                setCurrentMove(initialFenId);
+            }
+        });
+    }, [fensToDisplay, setFen]);
+
+    if (fens.length === 0)
+        return <p>No moves are available!</p>
+
+    return <div style={{"width": "100%"}}>
+            <Button active={!(currentMove > 0 && fens.length > 0)} onClick={() => {
+                if (currentMove > 0) {
+                    setFen(fens[currentMove - 1]);
+                    setCurrentMove(currentMove - 1);
+                }
+            }} style={{"width": "50%"}}>
+                Previous Move
+            </Button>
+            <Button active={!(currentMove + 1 < fens.length)} onClick={() => {
+                if (currentMove + 1 < fens.length) {
+                    setFen(fens[currentMove + 1]);
+                    setCurrentMove(currentMove + 1);
+                }
+            }} style={{"width": "50%"}}>
+                Next Move
+            </Button>
+        </div>
 }
 
+interface ChessBoardFenExplorerProps {
+    // Function to call in order to get fens to display, e.g. this function can be an API call.
+    // The function returns the list of fens, and the index of the first fen to display.
+    fensToDisplay: Promise <[string[], number]>
+};
 
-function ChessBoard() {
+/** Allows the user to navigate a game, by going forward / backward in moves */
+export const ChessBoardFenExplorer = ({ fensToDisplay }: ChessBoardFenExplorerProps) => {
     let [fenCallback, setFenCallback] = useState<(fen: string) => void>(() => (value: string) => {
         console.log(`Ignored request for ${value} as callback was not registered!`);
     });
 
-    return <div>
-        <div style={{"padding": "30px"}}>
-            <ChessBoardFenSelector setFen={fenCallback} />
-        </div>
-        <div style={{"padding": "30px", "width": "400px"}}>
-            <ChessBoardView setBoardStateCallback={useCallback((x) => setFenCallback(() => x), [])} />
-        </div>
+    fensToDisplay.then((fens) => console.log(fens));
+    console.log("received as fens: " + fensToDisplay);
+
+    return <div style={{
+            "display": "flex",
+            "flexDirection": "column",
+            "justifyContent": "center",
+            "padding": "30px",
+            "width": "500px"}}>
+            <ChessBoardView setBoardStateCallback={(x) => setFenCallback(() => x)} />
+            <ChessBoardFenPicker setFen={fenCallback} fensToDisplay={fensToDisplay} />
     </div>
 }
-
-export default ChessBoard;

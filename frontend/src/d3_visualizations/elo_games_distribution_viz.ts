@@ -1,14 +1,16 @@
 import * as d3 from 'd3';
 import { FetchBasicEloGameStats } from '../api/stats_api';
+import { FetchDummyFens } from '../api/fens_api';
 
 // set the dimensions and margins of the graph
-const margin = { top: 80, right: 50, bottom: 90, left: 40 },
-    width = 950 - margin.left - margin.right,
+const margin = { top: 80, right: 80, bottom: 90, left: 40 },
+    width = 700 - margin.left - margin.right,
     height = 470 - margin.top - margin.bottom;
 
-export const EloGamesDistributionViz = (querySelector: string) => {
+/** Displays a histogram of the numbers of games for each ELO level */
+export const EloGamesDistributionViz = (selector: string, setFens: (fens: Promise <[string[], number]>) => void) => {
     FetchBasicEloGameStats().then(data => {
-        var svg = d3.select(querySelector)
+        var svg = d3.select(selector)
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -20,7 +22,7 @@ export const EloGamesDistributionViz = (querySelector: string) => {
             .attr("font-size", "24px")
             .text("Basic ELO Stats")
 
-        var xScale = d3.scaleBand().range([0, width]).padding(0.4),
+        var xScale = d3.scaleBand().range([0, width]).padding(0.2),
             yScale = d3.scaleLinear().range([height, 0]);
 
         var g = svg.append("g")
@@ -33,6 +35,7 @@ export const EloGamesDistributionViz = (querySelector: string) => {
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale))
             .selectAll("text")
+            .attr("font-size", "8px")
             .attr("transform", "rotate(-30) translate(-10,5)");
 
         g.append("text")
@@ -63,5 +66,9 @@ export const EloGamesDistributionViz = (querySelector: string) => {
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => height - yScale(d.nr_games))
             .attr("fill", "blue")
+            .on("click", () => {
+                console.log("Clicked!")
+                setFens(FetchDummyFens().then(fens => [fens, 0]))
+            })
     }).catch(err => console.log(err));
 }
