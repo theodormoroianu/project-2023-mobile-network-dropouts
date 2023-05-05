@@ -51,5 +51,5 @@ class BasicStats:
     """
     Stores basic stats
     """
-    # list of dicts of type { "elo_min", "elo_max", "nr_games" }
+    # list of dicts of type { "elo_min", "elo_max", "nr_games", "sample_game": ["fen"] }
     elo_average_to_nr_games = []

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import D3Wrapper from './d3_wrapper';
 import { ChessBoardFenExplorer } from './chessboard';
+import { Card, Elevation } from '@blueprintjs/core';
 
 interface ComponentAndChessboardSplitScreenProps {
     Component: ({ setFensToDisplay }: { setFensToDisplay: (fens: Promise<[string[], number]>) => void }) => JSX.Element
@@ -36,14 +37,19 @@ export const D3VizAndChessboardSplitScreen = ({ d3Viz }: D3VizAndChessboardSplit
     return <div style={{
         "padding": "30px",
         "display": "flex",
-        "flexDirection": "row"
+        "flexDirection": "row",
+        "width": "100%"
         }}>
         <div style={{"width": "60%"}}>
-            <D3Wrapper D3Renderer={(selector) => d3Viz(selector, setFensToDisplay)} />
+            <Card interactive={false} elevation={Elevation.TWO}> 
+                <D3Wrapper D3Renderer={(selector) => d3Viz(selector, setFensToDisplay)} />
+            </Card>
         </div>
-        <div style={{"flexGrow": "5%"}}></div>
+        <div style={{"width": "5%"}}></div>
         <div style={{"width": "35%"}}>
-        <ChessBoardFenExplorer fensToDisplay={fensToDisplay} />
+        <Card interactive={false} elevation={Elevation.TWO}>
+            <ChessBoardFenExplorer fensToDisplay={fensToDisplay} />
+        </Card>
         </div>
     </div>;
 }

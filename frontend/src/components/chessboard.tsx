@@ -101,7 +101,7 @@ export const ChessBoardFenExplorer = ({ fensToDisplay }: ChessBoardFenExplorerPr
             "flexDirection": "column",
             "justifyContent": "center",
             "padding": "30px",
-            "width": "500px"}}>
+            "width": "100%"}}>
             <ChessBoardView setBoardStateCallback={(x) => setFenCallback(() => x)} />
             <ChessBoardFenPicker setFen={fenCallback} fensToDisplay={fensToDisplay} />
     </div>

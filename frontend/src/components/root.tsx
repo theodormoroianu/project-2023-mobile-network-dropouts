@@ -6,7 +6,7 @@ import { D3VizAndChessboardSplitScreen } from './viz_and_chess_wrapper';
 
 function Root() {
     // stores the view we want to display
-    let [view, setView] = useState("sample_page");
+    let [view, setView] = useState("elo_games_distribution");
 
     return (
             <div style={{"width": "100%"}}>

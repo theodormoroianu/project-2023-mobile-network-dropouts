@@ -4,11 +4,21 @@ Name is really bad. Should change it.
 This module tries to replicate what "stats.py" did.
 """
 
+from typing import List
 import chess.pgn as pgn
 from collections import defaultdict
 from tqdm import tqdm
 import generate_data
 import storage
+
+def generate_game_fens(game) -> List[str]:
+    fens = []
+    while game is not None:
+        fens.append(game.board().fen())
+        game = game.next()
+    # print(f"Generated {fens}")
+    return fens
+
 
 def compute_openings_and_time_control(chunk: str):
     """
@@ -22,6 +32,7 @@ def compute_openings_and_time_control(chunk: str):
     timecontrol = defaultdict(lambda: 0)
     BUCKET_SIZE = 100
     games_by_average_elo_buckets = defaultdict(lambda: 0)
+    sample_game_for_average_elo_buckets = defaultdict(lambda: [])
 
     # when we discard a game
     DISCARD_THRESHOLD = 100
@@ -75,7 +86,10 @@ def compute_openings_and_time_control(chunk: str):
             outcome[2] + old_outcomes[2]
         )
 
-        games_by_average_elo_buckets[(ELO_W + ELO_B) // (2 * BUCKET_SIZE)] += 1
+        idx = (ELO_W + ELO_B) // (2 * BUCKET_SIZE)
+        games_by_average_elo_buckets[idx] += 1
+        if idx not in sample_game_for_average_elo_buckets:
+            sample_game_for_average_elo_buckets[idx] = generate_game_fens(game)
 
     THRESHOLD_BULLET = 180
     THRESHOLD_BLITZ = 5*60
@@ -89,35 +103,9 @@ def compute_openings_and_time_control(chunk: str):
     basic_stats.elo_average_to_nr_games = [{
         "elo_min": i[0] * 100,
         "elo_max": i[0] * 100 + 99,
-        "nr_games": i[1] / nr_played_games * 100
+        "nr_games": i[1] / nr_played_games * 100,
+        "sample_game": sample_game_for_average_elo_buckets[i[0]]
     } for i in a]
-
-
-    # a = sorted([(timecontrol[i], i) for i in timecontrol])[::-1][:10]
-    # for i in a:
-    #     print(f"| {i[0] / nr_played_games * 100:.4f}% | {i[1]} |")
-
- 
-    # a = sorted([(openings_frequency[i], i) for i in openings_frequency])[::-1][:15]
-    # for i in a:
-    #     print(f"| {i[0] / nr_played_games * 100:.4f}% | {i[1]} |")
-
-
-    # a = sorted(
-    #     [(openings_outcomes[i][0] / sum(openings_outcomes[i]) * 100, openings_outcomes[i], i)
-    #     for i in openings_outcomes if sum(openings_outcomes[i]) > 20]
-    # )[::-1][:15]
-    # for i in a:
-    #     print(f"| {i[2]} | {i[0]:.4f}% |")
-
-
-    # a = sorted(
-    #     [(openings_outcomes[i][1] / sum(openings_outcomes[i]) * 100, openings_outcomes[i], i)
-    #     for i in openings_outcomes if sum(openings_outcomes[i]) > 20]
-    # )[::-1][:15]
-    # for i in a:
-    #     print(f"| {i[2]} | {i[0]:.4f}% |")
-
 
 def compute_game_stats():
     """
