@@ -16,38 +16,82 @@ def generate_game_fens(game) -> List[str]:
     while game is not None:
         fens.append(game.board().fen())
         game = game.next()
-    # print(f"Generated {fens}")
     return fens
 
+class ComputeGamesByAverageBucket:
+    def __init__(self):
+        self.timecontrol = defaultdict(lambda: 0)
+        self.games_by_average_elo_buckets = defaultdict(lambda: 0)
+        self.sample_game_for_average_elo_buckets = defaultdict(lambda: [])
+        self.openings_frequency = defaultdict(lambda: 0)
+        # (#white win, #black win, #draw)
+        self.openings_outcomes = defaultdict(lambda: (0, 0, 0))
+        self.nr_played_games = 0
 
-def compute_openings_and_time_control(chunk: str):
+    def process_new_game(self, game: pgn.Game, elo_bucket: int):
+        h = game.headers
+        result = h["Result"]
+
+        self.nr_played_games += 1
+
+        self.timecontrol[h["TimeControl"]] += 1
+        self.openings_frequency[h["Opening"]] += 1
+
+        outcome = (1 if result == "1-0" else 0,
+                1 if result == "0-1" else 0,
+                1 if result == "1/2-1/2" else 0)
+        try:
+            assert outcome[0] + outcome[1] + outcome[2] == 1
+        except:
+            print("Error:")
+            print(outcome)
+            print(result)
+            return
+
+        old_outcomes = self.openings_outcomes[h["Opening"]]
+        self.openings_outcomes[h["Opening"]] = (
+            outcome[0] + old_outcomes[0],
+            outcome[1] + old_outcomes[1],
+            outcome[2] + old_outcomes[2]
+        )
+
+        self.games_by_average_elo_buckets[elo_bucket] += 1
+        if elo_bucket not in self.sample_game_for_average_elo_buckets:
+            self.sample_game_for_average_elo_buckets[elo_bucket] = generate_game_fens(game)
+
+
+    def dump_stats(self):
+        # generate basic stats
+        basic_stats: storage.BasicStats = storage.get_entry(storage.BasicStats, True)
+
+        a = sorted([(i, self.games_by_average_elo_buckets[i]) for i in self.games_by_average_elo_buckets])
+        basic_stats.elo_average_to_nr_games = [{
+            "elo_min": i[0] * 100,
+            "elo_max": i[0] * 100 + 99,
+            "nr_games": i[1] / self.nr_played_games * 100,
+            "sample_game": self.sample_game_for_average_elo_buckets[i[0]]
+        } for i in a]
+
+        print("a = ", a)
+
+
+
+def compute_stats_for_chunk(chunk: str):
     """
-    Tries to compute game stats.
-    TODO: Specify what.
-    TODO: Make this function combine with other stats, instead of overwriting them
+    Tries to compute game stats for a single chunk.
     """
-    TOTAL_NR_GAMES = 11348506
-    db = open(chunk, "r")
 
-    timecontrol = defaultdict(lambda: 0)
-    BUCKET_SIZE = 100
-    games_by_average_elo_buckets = defaultdict(lambda: 0)
-    sample_game_for_average_elo_buckets = defaultdict(lambda: [])
-
-    # when we discard a game
+    compute_games_by_avg_bucket = ComputeGamesByAverageBucket()
+    
     DISCARD_THRESHOLD = 100
-    nr_discarded_games = 0
+    BUCKET_SIZE = 100
 
-    nr_played_games = 0
-
-    openings_frequency = defaultdict(lambda: 0)
-    # (#white win, #black win, #draw)
-    openings_outcomes = defaultdict(lambda: (0, 0, 0))
+    db = open(chunk, "r")
 
     print(f"Parsing chunk {chunk}...")
     for _ in tqdm(range(generate_data.GAMES_PER_CHUNK // 20)):
         game = pgn.read_game(db)
-        # finished reading the chunk        
+        # finished reading the chunk
         if game is None:
             break
 
@@ -57,62 +101,25 @@ def compute_openings_and_time_control(chunk: str):
 
         # ELO too different. Skip game
         if abs(ELO_W - ELO_B) > DISCARD_THRESHOLD:
-            nr_discarded_games += 1
             continue
 
         if result == "*":
             # game is outgoing, silent ignore
             continue
 
-        nr_played_games += 1
+        elo_bucket = (ELO_W + ELO_B) // (2 * BUCKET_SIZE)
 
-        timecontrol[h["TimeControl"]] += 1
-        openings_frequency[h["Opening"]] += 1
+        compute_games_by_avg_bucket.process_new_game(game, elo_bucket)
 
-        outcome = (1 if result == "1-0" else 0,
-                1 if result == "0-1" else 0,
-                1 if result == "1/2-1/2" else 0)
-        try:
-            assert outcome[0] + outcome[1] + outcome[2] == 1
-        except:
-            print(outcome)
-            print(result)
-            break
+    compute_games_by_avg_bucket.dump_stats()
 
-        old_outcomes = openings_outcomes[h["Opening"]]
-        openings_outcomes[h["Opening"]] = (
-            outcome[0] + old_outcomes[0],
-            outcome[1] + old_outcomes[1],
-            outcome[2] + old_outcomes[2]
-        )
-
-        idx = (ELO_W + ELO_B) // (2 * BUCKET_SIZE)
-        games_by_average_elo_buckets[idx] += 1
-        if idx not in sample_game_for_average_elo_buckets:
-            sample_game_for_average_elo_buckets[idx] = generate_game_fens(game)
-
-    THRESHOLD_BULLET = 180
-    THRESHOLD_BLITZ = 5*60
-    THRESHOLD_RAPID = 30*60
-
-    # generate basic stats
-    basic_stats: storage.BasicStats = storage.get_entry(storage.BasicStats, True)
-
-
-    a = sorted([(i, games_by_average_elo_buckets[i]) for i in games_by_average_elo_buckets])
-    basic_stats.elo_average_to_nr_games = [{
-        "elo_min": i[0] * 100,
-        "elo_max": i[0] * 100 + 99,
-        "nr_games": i[1] / nr_played_games * 100,
-        "sample_game": sample_game_for_average_elo_buckets[i[0]]
-    } for i in a]
 
 def compute_game_stats():
     """
     TODO: What does this do?
     """
     chunks = generate_data.get_chunks_names()
-    compute_openings_and_time_control(chunks[0])
+    compute_stats_for_chunk(chunks[0])
 
     # save to disk
     storage.save_all_entries()
