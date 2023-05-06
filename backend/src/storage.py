@@ -54,5 +54,7 @@ class BasicStats:
     # list of dicts of type { "elo_min", "elo_max", "nr_games", "sample_game": ["fen"] }
     elo_average_to_nr_games = []
 
-    # list of dicts of type { "elo_min", "elo_max", "average_length" }
+    # list of dicts of type { "elo_min", "elo_max", "average_length", "frq_games_by_nr_moves": [] }
+    # frq_games_by_nr_moves[i] = number of games in the specific elo bucket which lastes for i moves
+    #                           i manually capped at 100 moves
     elo_average_to_length_of_game = []

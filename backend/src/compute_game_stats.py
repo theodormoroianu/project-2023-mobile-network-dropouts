@@ -13,6 +13,9 @@ import storage
 
 
 BUCKET_SIZE = 100
+# Cap value for maximum number of moves played in a game in an elo bucket
+# If moves >= ..._CAPPED then it is replaced with CAPPED
+MAXIMAL_GAME_MOVES_CAPPED = 200
 
 def generate_game_fens(game) -> List[str]:
     fens = []
@@ -29,6 +32,9 @@ class ComputeGamesByAverageBucket:
 
         # total length of the games played for an ELO range
         self.total_length_game_by_elo_bucket = defaultdict(lambda: 0)
+        # total_nr_games...[elo_bucket][nr_moves] = nr of games played in the elo bucket 
+        #                                           that lasted nr_moves 
+        self.total_nr_of_games_by_length_by_elo_bucket = defaultdict(lambda: [0 for i in range(MAXIMAL_GAME_MOVES_CAPPED)])
 
         self.openings_frequency = defaultdict(lambda: 0)
         # (#white win, #black win, #draw)
@@ -69,8 +75,12 @@ class ComputeGamesByAverageBucket:
         if elo_bucket not in self.sample_game_for_average_elo_buckets:
             self.sample_game_for_average_elo_buckets[elo_bucket] = generate_game_fens(game)
 
+        nr_moves = len(list(game.mainline()))
         # store the total sum of the number of moves over all games of a given ELO bucket
-        self.total_length_game_by_elo_bucket[elo_bucket] += len(list(game.mainline()))
+        self.total_length_game_by_elo_bucket[elo_bucket] += nr_moves
+        # increase the nr of games with this specific nr of moves
+        self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket][min(nr_moves, MAXIMAL_GAME_MOVES_CAPPED - 1)] += 1
+
 
 
     def dump_stats(self):
@@ -92,6 +102,7 @@ class ComputeGamesByAverageBucket:
             "elo_max": elo_bucket * BUCKET_SIZE + BUCKET_SIZE - 1,
             "average_length": self.total_length_game_by_elo_bucket[elo_bucket] 
                     / self.games_by_average_elo_buckets[elo_bucket],
+            "frq_games_by_nr_moves": self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket]
         } for elo_bucket in sorted_elo_buckets]
 
 
@@ -109,7 +120,7 @@ def compute_stats_for_chunk(chunk: str):
     db = open(chunk, "r")
 
     print(f"Parsing chunk {chunk}...")
-    for _ in tqdm(range(generate_data.GAMES_PER_CHUNK // 20)):
+    for _ in tqdm(range(generate_data.GAMES_PER_CHUNK)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:

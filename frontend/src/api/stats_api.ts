@@ -20,6 +20,7 @@ export interface AverageGameLengthStat {
     "elo_min": number,
     "elo_max": number,
     "average_length": number
+    "frq_games_by_nr_moves": number[]
 }
 
 export const FetchAverageGameLengthStats = (): Promise<AverageGameLengthStat[]> => {

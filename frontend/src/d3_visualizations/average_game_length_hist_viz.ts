@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { FetchAverageGameLengthStats } from '../api/stats_api';
+import { AverageGameLengthStat, FetchAverageGameLengthStats } from '../api/stats_api';
 
 // // set the dimensions and margins of the graph
 // const margin = { top: 80, right: 80, bottom: 90, left: 40 },
@@ -7,7 +7,7 @@ import { FetchAverageGameLengthStats } from '../api/stats_api';
 //     height = 470 - margin.top - margin.bottom;
 
 /** Displays a histogram of the numbers of games for each ELO level */
-export const AverageGameLengthHistViz = (selector: string) => {
+export const AverageGameLengthHistViz = (selector: string, setSlaveData: (data: AverageGameLengthStat) => void) => {
     FetchAverageGameLengthStats().then(data => {
         var svg_dom_obj = document.querySelector(selector);
         console.log(svg_dom_obj)
@@ -72,5 +72,9 @@ export const AverageGameLengthHistViz = (selector: string) => {
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => height - yScale(d.average_length))
             .attr("fill", "rgb(30,129,176)")
+            .on("click", (event: any, obj: AverageGameLengthStat) => {
+                console.log("Clicked!", obj)
+                setSlaveData(obj)
+            })
     }).catch(err => console.log(err));
 }
