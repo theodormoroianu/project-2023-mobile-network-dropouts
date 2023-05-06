@@ -72,7 +72,6 @@ class ComputeGamesByAverageBucket:
             "sample_game": self.sample_game_for_average_elo_buckets[i[0]]
         } for i in a]
 
-        print("a = ", a)
 
 
 

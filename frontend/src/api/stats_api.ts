@@ -14,3 +14,19 @@ export const FetchBasicEloGameStats = (): Promise<BasicEloGameStat[]> => {
         console.log(err)
     });
 }
+
+
+export interface AverageGameLengthStat {
+    "elo_min": number,
+    "elo_max": number,
+    "average_length": number
+}
+
+export const FetchAverageGameLengthStats = (): Promise<AverageGameLengthStat[]> => {
+    return fetch("/api/average-game-length-stats").then(
+        response => response.json()
+    ).catch(err => {
+        console.log("Unable to fetch average length game:")
+        console.log(err)
+    });
+}
