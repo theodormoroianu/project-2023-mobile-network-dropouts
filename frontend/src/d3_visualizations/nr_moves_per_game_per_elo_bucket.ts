@@ -22,7 +22,7 @@ export const NrMovesPerGamePerEloBucket = (selector: string, data: AverageGameLe
         .attr("font-size", "24px")
         .text("Number of moves histogram")
 
-    var xScale = d3.scaleBand().range([0, width]).padding(0.2),
+    var xScale = d3.scaleBand().range([0, width]).padding(0.),
         yScale = d3.scaleLinear().range([height, 0]);
 
     var g = svg.append("g")
@@ -63,7 +63,7 @@ export const NrMovesPerGamePerEloBucket = (selector: string, data: AverageGameLe
         .attr("class", "bar")
         .attr("x", (idx) => xScale(`${idx} moves`)??0)
         .attr("y", (idx) => yScale(data.frq_games_by_nr_moves[idx]))
-        .attr("width", xScale.bandwidth())
+        .attr("width", xScale.bandwidth() + 0.5)
         .attr("height", (idx) => height - yScale(data.frq_games_by_nr_moves[idx]))
-        .attr("fill", "rgb(30,129,176)")
+        .attr("fill", "rgb(205,162,120)")
 }

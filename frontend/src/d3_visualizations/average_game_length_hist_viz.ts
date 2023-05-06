@@ -71,7 +71,7 @@ export const AverageGameLengthHistViz = (selector: string, setSlaveData: (data: 
             .attr("y", (d) => yScale(d.average_length))
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => height - yScale(d.average_length))
-            .attr("fill", "rgb(30,129,176)")
+            .attr("fill", "rgb(117,55,66)")
             .on("click", (event: any, obj: AverageGameLengthStat) => {
                 console.log("Clicked!", obj)
                 setSlaveData(obj)
