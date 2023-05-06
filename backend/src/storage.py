@@ -53,3 +53,6 @@ class BasicStats:
     """
     # list of dicts of type { "elo_min", "elo_max", "nr_games", "sample_game": ["fen"] }
     elo_average_to_nr_games = []
+
+    # list of dicts of type { "elo_min", "elo_max", "average_length" }
+    elo_average_to_length_of_game = []

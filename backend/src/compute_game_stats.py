@@ -11,6 +11,9 @@ from tqdm import tqdm
 import generate_data
 import storage
 
+
+BUCKET_SIZE = 100
+
 def generate_game_fens(game) -> List[str]:
     fens = []
     while game is not None:
@@ -23,6 +26,10 @@ class ComputeGamesByAverageBucket:
         self.timecontrol = defaultdict(lambda: 0)
         self.games_by_average_elo_buckets = defaultdict(lambda: 0)
         self.sample_game_for_average_elo_buckets = defaultdict(lambda: [])
+
+        # total length of the games played for an ELO range
+        self.total_length_game_by_elo_bucket = defaultdict(lambda: 0)
+
         self.openings_frequency = defaultdict(lambda: 0)
         # (#white win, #black win, #draw)
         self.openings_outcomes = defaultdict(lambda: (0, 0, 0))
@@ -55,9 +62,15 @@ class ComputeGamesByAverageBucket:
             outcome[2] + old_outcomes[2]
         )
 
+        # number of games for a given ELO bucket
         self.games_by_average_elo_buckets[elo_bucket] += 1
+
+        # if we don't already have a sample game, just store this game
         if elo_bucket not in self.sample_game_for_average_elo_buckets:
             self.sample_game_for_average_elo_buckets[elo_bucket] = generate_game_fens(game)
+
+        # store the total sum of the number of moves over all games of a given ELO bucket
+        self.total_length_game_by_elo_bucket[elo_bucket] += len(list(game.mainline()))
 
 
     def dump_stats(self):
@@ -66,11 +79,20 @@ class ComputeGamesByAverageBucket:
 
         a = sorted([(i, self.games_by_average_elo_buckets[i]) for i in self.games_by_average_elo_buckets])
         basic_stats.elo_average_to_nr_games = [{
-            "elo_min": i[0] * 100,
-            "elo_max": i[0] * 100 + 99,
-            "nr_games": i[1] / self.nr_played_games * 100,
+            "elo_min": i[0] * BUCKET_SIZE,
+            "elo_max": i[0] * BUCKET_SIZE + BUCKET_SIZE - 1,
+            "nr_games": i[1] / self.nr_played_games * BUCKET_SIZE,
             "sample_game": self.sample_game_for_average_elo_buckets[i[0]]
         } for i in a]
+
+
+        sorted_elo_buckets = sorted([i for i in self.total_length_game_by_elo_bucket])
+        basic_stats.elo_average_to_length_of_game = [{
+            "elo_min": elo_bucket * BUCKET_SIZE,
+            "elo_max": elo_bucket * BUCKET_SIZE + BUCKET_SIZE - 1,
+            "average_length": self.total_length_game_by_elo_bucket[elo_bucket] 
+                    / self.games_by_average_elo_buckets[elo_bucket],
+        } for elo_bucket in sorted_elo_buckets]
 
 
 
@@ -83,7 +105,6 @@ def compute_stats_for_chunk(chunk: str):
     compute_games_by_avg_bucket = ComputeGamesByAverageBucket()
     
     DISCARD_THRESHOLD = 100
-    BUCKET_SIZE = 100
 
     db = open(chunk, "r")
 
@@ -109,6 +130,7 @@ def compute_stats_for_chunk(chunk: str):
         elo_bucket = (ELO_W + ELO_B) // (2 * BUCKET_SIZE)
 
         compute_games_by_avg_bucket.process_new_game(game, elo_bucket)
+        
 
     compute_games_by_avg_bucket.dump_stats()
 

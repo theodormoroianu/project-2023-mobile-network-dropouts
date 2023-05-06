@@ -19,15 +19,5 @@ def dummy_game_fens():
 
 @api.route("/average-game-length-stats")
 def average_game_length_stats():
-    return [
-        {
-            "elo_min": 200,
-            "elo_max": 300,
-            "average_length": 20.4
-        },
-        {
-            "elo_min": 300,
-            "elo_max": 400,
-            "average_length": 18.5
-        }
-    ]
+    basic_stats: storage.BasicStats = storage.get_entry(storage.BasicStats)
+    return basic_stats.elo_average_to_length_of_game
