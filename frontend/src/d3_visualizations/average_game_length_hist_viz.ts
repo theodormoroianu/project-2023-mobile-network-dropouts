@@ -76,5 +76,15 @@ export const AverageGameLengthHistViz = (selector: string, setSlaveData: (data: 
                 console.log("Clicked!", obj)
                 setSlaveData(obj)
             })
+            .on("mouseover", function(this: SVGRectElement, event: any, obj: AverageGameLengthStat) {
+                d3.select(this)
+                .style("stroke", "black")
+                .attr("fill", "rgb(157,75,96)")
+            })
+            .on("mouseleave", function(this: SVGRectElement, event: any, obj: AverageGameLengthStat) {
+                d3.select(this)
+                .style("stroke", "none")
+                .attr("fill", "rgb(117,55,66)")
+            })
     }).catch(err => console.log(err));
 }

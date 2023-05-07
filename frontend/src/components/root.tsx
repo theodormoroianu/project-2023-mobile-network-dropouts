@@ -19,7 +19,7 @@ function Root() {
                     <NavbarDivider />
                     <Button className={Classes.MINIMAL} icon="home" text="ELO" onClick={() => setView("elo_games_distribution")} />
                     <Button className={Classes.MINIMAL} icon="document" text="Heat Map" onClick={() => setView("d3_chess")} />
-                    <Button className={Classes.MINIMAL} icon="document" text="Average Length" onClick={() => setView("average_game_length_his_viz")} />
+                    <Button className={Classes.MINIMAL} icon="model" text="Average Length" onClick={() => setView("average_game_length_his_viz")} />
                 </NavbarGroup>
             </Navbar>
             <div style={{ "width": "100%", "padding": "30px" }}>

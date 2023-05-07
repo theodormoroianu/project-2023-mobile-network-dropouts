@@ -108,7 +108,7 @@ class ComputeGamesByAverageBucket:
 
 
 
-def compute_stats_for_chunk(chunk: str):
+def compute_stats_for_chunk(chunks: list[str]):
     """
     Tries to compute game stats for a single chunk.
     """
@@ -117,14 +117,23 @@ def compute_stats_for_chunk(chunk: str):
     
     DISCARD_THRESHOLD = 100
 
-    db = open(chunk, "r")
+    active_chunk = chunks[0]
+    chunks = chunks[1:]
+    db = open(active_chunk, "r")
 
-    print(f"Parsing chunk {chunk}...")
-    for _ in tqdm(range(generate_data.GAMES_PER_CHUNK)):
+    print(f"Parsing chunk {active_chunk}...")
+    for _ in tqdm(range(4 * generate_data.GAMES_PER_CHUNK)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:
-            break
+            # open a new chunk
+            if chunks != []:
+                active_chunk = chunks[0]
+                chunks = chunks[1:]
+                db = open(active_chunk, "r")
+                continue
+            else:
+                break
 
         h = game.headers
         ELO_W, ELO_B = int(h["WhiteElo"]), int(h["BlackElo"])
@@ -151,7 +160,7 @@ def compute_game_stats():
     TODO: What does this do?
     """
     chunks = generate_data.get_chunks_names()
-    compute_stats_for_chunk(chunks[0])
+    compute_stats_for_chunk(chunks)
 
     # save to disk
     storage.save_all_entries()

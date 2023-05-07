@@ -17,7 +17,7 @@ function SideBySideVizWrapper<T>({ D3RendererMasterViz, D3RendererSlaveViz }: Si
         "width": "100%"
     }}>
         <div style={{ "width": "50%" }}>
-            <Card interactive={false} elevation={Elevation.TWO}>
+            <Card interactive={true} elevation={Elevation.TWO}>
                 <D3Wrapper D3Renderer={(selector) => D3RendererMasterViz(selector, setData)} />
             </Card>
         </div>

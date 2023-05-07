@@ -41,7 +41,7 @@ export const D3VizAndChessboardSplitScreen = ({ d3Viz }: D3VizAndChessboardSplit
         "width": "100%"
         }}>
         <div style={{"width": "60%"}}>
-            <Card interactive={false} elevation={Elevation.TWO}> 
+            <Card interactive={true} elevation={Elevation.TWO}> 
                 <D3Wrapper D3Renderer={(selector) => d3Viz(selector, setFensToDisplay)} />
             </Card>
         </div>

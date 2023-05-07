@@ -76,5 +76,15 @@ export const EloGamesDistributionViz = (selector: string, setFens: (fens: Promis
                 console.log("Clicked!", obj)
                 setFens(Promise.resolve([obj.sample_game, 0]))
             })
+            .on("mouseover", function(this: SVGRectElement, event: any, obj: BasicEloGameStat) {
+                d3.select(this)
+                .style("stroke", "black")
+                .attr("fill", "rgb(20,82,146)")
+            })
+            .on("mouseleave", function(this: SVGRectElement, event: any, obj: BasicEloGameStat) {
+                d3.select(this)
+                .style("stroke", "none")
+                .attr("fill", "rgb(30,129,176)")
+            })
     }).catch(err => console.log(err));
 }
