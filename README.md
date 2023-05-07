@@ -277,7 +277,7 @@ We have also implemented a proof-of-concept D3 heatmap view, connected to a ches
 > You should have an initial website running with the basic skeleton of the
 visualization/widgets.
 
-The easiest way to run the project is to follow the instructions provided in the "readme.md" file on github. More concretely:
+These are the following steps to run the project:
 1. Clone the repository.
 2. Generate the backend data, by running in the backend folder:
     - `$ cd backend/`
