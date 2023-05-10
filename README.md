@@ -8,6 +8,10 @@
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
 
+## Website
+
+The project is live [here](http://158.178.201.114/).
+
 ## Milestone 1 (7th April, 5pm)
 
 **10% of the final grade**
@@ -288,6 +292,8 @@ These are the following steps to run the project:
     - `$ npm run start`
 
 The app should then be accessible on [http://localhost:3000/](http://localhost:3000/).
+
+Alternatively, the app is deployed [here](http://158.178.201.114/).
 
 ## Milestone 3 (4th June, 5pm)
 
