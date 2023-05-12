@@ -17,6 +17,8 @@ BUCKET_SIZE = 100
 # If moves >= ..._CAPPED then it is replaced with CAPPED
 MAXIMAL_GAME_MOVES_CAPPED = 200
 
+MAXIMUM_OPENINGS_CAPPED = 30
+
 def generate_game_fens(game) -> List[str]:
     fens = []
     while game is not None:
@@ -26,6 +28,7 @@ def generate_game_fens(game) -> List[str]:
 
 class ComputeGamesByAverageBucket:
     def __init__(self):
+        self.elo_buckets = set()
         self.timecontrol = defaultdict(lambda: 0)
         self.games_by_average_elo_buckets = defaultdict(lambda: 0)
         self.sample_game_for_average_elo_buckets = defaultdict(lambda: [])
@@ -36,6 +39,8 @@ class ComputeGamesByAverageBucket:
         #                                           that lasted nr_moves 
         self.total_nr_of_games_by_length_by_elo_bucket = defaultdict(lambda: [0 for i in range(MAXIMAL_GAME_MOVES_CAPPED)])
 
+        self.frequency_of_openings_by_elo_bucket = defaultdict(lambda: defaultdict(lambda: 0))
+
         self.openings_frequency = defaultdict(lambda: 0)
         # (#white win, #black win, #draw)
         self.openings_outcomes = defaultdict(lambda: (0, 0, 0))
@@ -45,6 +50,7 @@ class ComputeGamesByAverageBucket:
         h = game.headers
         result = h["Result"]
 
+        self.elo_buckets.add(elo_bucket)
         self.nr_played_games += 1
 
         self.timecontrol[h["TimeControl"]] += 1
@@ -81,17 +87,20 @@ class ComputeGamesByAverageBucket:
         # increase the nr of games with this specific nr of moves
         self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket][min(nr_moves, MAXIMAL_GAME_MOVES_CAPPED - 1)] += 1
 
+        self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]] += 1
+
 
 
     def dump_stats(self):
         # generate basic stats
         basic_stats: storage.BasicStats = storage.get_entry(storage.BasicStats, True)
+        per_elo_stats: storage.PerEloStats = storage.get_entry(storage.PerEloStats, True)
 
         a = sorted([(i, self.games_by_average_elo_buckets[i]) for i in self.games_by_average_elo_buckets])
         basic_stats.elo_average_to_nr_games = [{
             "elo_min": i[0] * BUCKET_SIZE,
             "elo_max": i[0] * BUCKET_SIZE + BUCKET_SIZE - 1,
-            "nr_games": i[1] / self.nr_played_games * BUCKET_SIZE,
+            "nr_games": i[1] / self.nr_played_games * 100,
             "sample_game": self.sample_game_for_average_elo_buckets[i[0]]
         } for i in a]
 
@@ -104,6 +113,41 @@ class ComputeGamesByAverageBucket:
                     / self.games_by_average_elo_buckets[elo_bucket],
             "frq_games_by_nr_moves": self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket]
         } for elo_bucket in sorted_elo_buckets]
+
+        # Compute most used openings per elo bucket stats
+        sorted_elo_buckets_openings = sorted([i for i in self.frequency_of_openings_by_elo_bucket])
+        basic_stats.elo_average_to_frequency_of_opening = []
+        most_used_openings_per_elo_bucket = dict()
+        for elo_bucket in sorted_elo_buckets_openings:
+            frequency_by_name = self.frequency_of_openings_by_elo_bucket[elo_bucket]            
+            most_used_openings = sorted([(frequency_by_name[i], i) for i in frequency_by_name])[::-1]
+            if len(most_used_openings) > MAXIMUM_OPENINGS_CAPPED:
+                most_used_openings = most_used_openings[:MAXIMUM_OPENINGS_CAPPED]
+            most_used_openings_per_elo_bucket[elo_bucket] = { opening: frq for frq, opening in most_used_openings }
+
+        for elo_bucket in sorted_elo_buckets_openings:
+            item = {
+                "elo_min": elo_bucket * BUCKET_SIZE,
+                "elo_max": elo_bucket * BUCKET_SIZE + BUCKET_SIZE - 1,
+                "most_used_openings_and_frq": most_used_openings_per_elo_bucket[elo_bucket]
+            }
+            basic_stats.elo_average_to_frequency_of_opening.append(item)
+
+
+        # Populate "elo_min", "elo_max", "nr_games", "sample_game": ["fen"]"average_length", "frq_games_by_nr_moves": [], "most_used_openings_and_frq": { str: int }
+        for elo_bucket in self.elo_buckets:
+            if elo_bucket not in per_elo_stats.per_elo_stats:
+                per_elo_stats.per_elo_stats[elo_bucket] = dict()
+            elo_stats = per_elo_stats.per_elo_stats[elo_bucket]
+
+            elo_stats["elo_min"] = elo_bucket * BUCKET_SIZE
+            elo_stats["elo_max"] = elo_bucket * BUCKET_SIZE + BUCKET_SIZE - 1
+            elo_stats["nr_games"] = self.games_by_average_elo_buckets[elo_bucket] / self.nr_played_games * 100
+            elo_stats["sample_game"] = self.sample_game_for_average_elo_buckets[elo_bucket]
+            elo_stats["average_length"] = self.total_length_game_by_elo_bucket[elo_bucket] / self.games_by_average_elo_buckets[elo_bucket],
+            elo_stats["frq_games_by_nr_moves"] = self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket]
+            elo_stats["most_used_openings_and_frq"] = most_used_openings_per_elo_bucket[elo_bucket]
+
 
 
 

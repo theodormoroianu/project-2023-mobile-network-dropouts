@@ -51,10 +51,33 @@ class BasicStats:
     """
     Stores basic stats
     """
-    # list of dicts of type { "elo_min", "elo_max", "nr_games", "sample_game": ["fen"] }
-    elo_average_to_nr_games = []
+    def __init__(self):
+        # list of dicts of type { "elo_min", "elo_max", "nr_games", "sample_game": ["fen"] }
+        self.elo_average_to_nr_games = []
 
-    # list of dicts of type { "elo_min", "elo_max", "average_length", "frq_games_by_nr_moves": [] }
+        # list of dicts of type { "elo_min", "elo_max", "average_length", "frq_games_by_nr_moves": [] }
+        # frq_games_by_nr_moves[i] = number of games in the specific elo bucket which lastes for i moves
+        #                           i manually capped at 100 moves
+        self.elo_average_to_length_of_game = []
+
+        # list of dicts of type { "elo_min", "elo_max", "most_used_openings_and_frq": { str: int } }
+        self.elo_average_to_frequency_of_opening = []
+
+
+class PerEloStats:
+    """
+    Store statitics per ELO bucket
+    """
+    # dict of dicts of type elo_bucket : {
+    # "elo_min", 
+    # "elo_max", 
+    # "nr_games",
+    # "sample_game": ["fen"],
+    # "average_length", 
+    # "frq_games_by_nr_moves": [], 
+    # "most_used_openings_and_frq": { str: int } 
+    # }
     # frq_games_by_nr_moves[i] = number of games in the specific elo bucket which lastes for i moves
     #                           i manually capped at 100 moves
-    elo_average_to_length_of_game = []
+    def __init__(self):
+        self.per_elo_stats = dict()
