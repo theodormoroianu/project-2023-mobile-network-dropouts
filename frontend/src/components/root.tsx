@@ -2,10 +2,11 @@ import { Alignment, Button, Classes, Navbar, NavbarDivider, NavbarGroup, NavbarH
 import { useState } from 'react';
 import { HeatMapViz } from '../d3_visualizations/heatmap_viz';
 import { EloGamesDistributionViz } from '../d3_visualizations/elo_games_distribution_viz';
-import D3Wrapper, { D3VizAndChessboardSplitScreen } from './viz_and_chess_wrapper';
+import { D3VizAndChessboardSplitScreen } from './viz_and_chess_wrapper';
 import { AverageGameLengthHistViz } from '../d3_visualizations/average_game_length_hist_viz';
 import SideBySideVizWrapper from './side_by_side_viz_wrapper';
 import { NrMovesPerGamePerEloBucket } from '../d3_visualizations/nr_moves_per_game_per_elo_bucket';
+import { EloBucketsViewer } from './elo_buckets_viewer';
 
 function Root() {
     // stores the view we want to display
@@ -20,6 +21,7 @@ function Root() {
                     <Button className={Classes.MINIMAL} icon="home" text="ELO" onClick={() => setView("elo_games_distribution")} />
                     <Button className={Classes.MINIMAL} icon="document" text="Heat Map" onClick={() => setView("d3_chess")} />
                     <Button className={Classes.MINIMAL} icon="model" text="Average Length" onClick={() => setView("average_game_length_his_viz")} />
+                    <Button className={Classes.MINIMAL} icon="comparison" text="ELO Specifics" onClick={() => setView("elo-specifics")} />
                 </NavbarGroup>
             </Navbar>
             <div style={{ "width": "100%", "padding": "30px" }}>
@@ -30,6 +32,7 @@ function Root() {
                     <SideBySideVizWrapper
                         D3RendererMasterViz={AverageGameLengthHistViz}
                         D3RendererSlaveViz={NrMovesPerGamePerEloBucket} />}
+                {view === "elo-specifics" && <EloBucketsViewer />}
             </div>
         </div>
     );

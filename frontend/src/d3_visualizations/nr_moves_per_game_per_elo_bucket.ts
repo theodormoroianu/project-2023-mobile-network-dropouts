@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { AverageGameLengthStat, FetchAverageGameLengthStats } from '../api/stats_api';
+import { AverageGameLengthStat } from '../api/stats_api';
 
 /** Displays a histogram of the length of the game for a given ELO bucket */
 export const NrMovesPerGamePerEloBucket = (selector: string, data: AverageGameLengthStat) => {
