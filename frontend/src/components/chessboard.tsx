@@ -94,7 +94,7 @@ export const ChessBoardFenExplorer = ({ fensToDisplay }: ChessBoardFenExplorerPr
     });
 
     fensToDisplay.then((fens) => console.log(fens));
-    console.log("received as fens: " + fensToDisplay);
+    // console.log("received as fens: " + fensToDisplay);
 
     return <div style={{
             "display": "flex",

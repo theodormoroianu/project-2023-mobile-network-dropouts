@@ -10,12 +10,11 @@ import { AverageGameLengthStat, FetchAverageGameLengthStats } from '../api/stats
 export const AverageGameLengthHistViz = (selector: string, setSlaveData: (data: AverageGameLengthStat) => void) => {
     FetchAverageGameLengthStats().then(data => {
         var svg_dom_obj = document.querySelector(selector);
-        console.log(svg_dom_obj)
         const margin = { top: 80, right: 80, bottom: 90, left: 40 },
             width = (svg_dom_obj?.clientWidth??10) - margin.left - margin.right,
             height = 470 - margin.top - margin.bottom;
 
-        console.log("Detected size of ",  svg_dom_obj?.clientWidth, width)
+        // console.log("Detected size of ",  svg_dom_obj?.clientWidth, width)
         var svg = d3.select(selector)
         .append("svg")
         .attr("width", width + margin.left + margin.right)

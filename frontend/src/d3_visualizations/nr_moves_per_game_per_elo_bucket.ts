@@ -4,12 +4,11 @@ import { AverageGameLengthStat } from '../api/stats_api';
 /** Displays a histogram of the length of the game for a given ELO bucket */
 export const NrMovesPerGamePerEloBucket = (selector: string, data: AverageGameLengthStat) => {
     var svg_dom_obj = document.querySelector(selector);
-    console.log(svg_dom_obj)
     const margin = { top: 80, right: 80, bottom: 90, left: 40 },
         width = (svg_dom_obj?.clientWidth??10) - margin.left - margin.right,
         height = 470 - margin.top - margin.bottom;
 
-    console.log("Detected size of ",  svg_dom_obj?.clientWidth, width)
+    // console.log("Detected size of ",  svg_dom_obj?.clientWidth, width)
     var svg = d3.select(selector)
     .append("svg")
     .attr("width", width + margin.left + margin.right)

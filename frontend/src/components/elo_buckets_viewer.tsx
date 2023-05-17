@@ -31,15 +31,15 @@ const renderActiveShape = (props: any) => {
     return (
       <g>
         {FixLength(payload.name).map((str, idx) => 
-          <text x={cx} y={cy + idx * 16} dy={0} textAnchor="middle" fill={fill}>
+          <text key={idx} x={cx} y={cy + idx * 16} dy={0} textAnchor="middle" fill={fill}>
           {FixLength(str)}
         </text>  
         )}
         <Sector
           cx={cx}
           cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius}
+          innerRadius={innerRadius - 8}
+          outerRadius={outerRadius + 10}
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
@@ -49,15 +49,17 @@ const renderActiveShape = (props: any) => {
           cy={cy}
           startAngle={startAngle}
           endAngle={endAngle}
-          innerRadius={outerRadius + 6}
-          outerRadius={outerRadius + 10}
+          innerRadius={outerRadius}
+          outerRadius={outerRadius}
           fill={fill}
         />
         <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
         <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`Opening played ${value} times`}</text>
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">
+          {`${(percent * 100).toFixed(2)}% Of Games`}
+        </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-          {`(Rate ${(percent * 100).toFixed(2)}%)`}
+          {`(Played ${value} times)`}
         </text>
       </g>
     );
@@ -68,16 +70,6 @@ interface EloBucketViewerProps {
 }
 /** Shows statistics about a SINGLE elo range */
 const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
-    // fetch the elo bucket
-    // let [data, setData] = useState<EloBucketStats | null>(null);
-
-    // useEffect(() => {
-    //     FetchEloBucketStats(eloBucket).then(setData)
-    // }, [eloBucket]);
-
-    // if (data === null || data === undefined)
-    //     return <Spinner />
-
     let [eloBucketStats, setEloBucketStats] = useState<EloBucketStats | null>(null);
 
     useEffect(() => {
@@ -97,7 +89,7 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
     let real_data = data.map(d => ({ name: d.name, value: d.value }));
 
     return <ResponsiveContainer width="100%" height="100%">
-    <PieChart width={400} height={400}>
+    <PieChart width={400} height={400} style={{"background": "white"}}>
       <Pie
         activeIndex={index}
         activeShape={renderActiveShape}
@@ -109,9 +101,10 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
         fill="#8884d8"
         dataKey="value"
         onMouseEnter={(_, index) => setIndex(index)}
-        style={{"WebkitTapHighlightColor": "transparent"}} > 
+        onMouseOver={(_, index) => setIndex(index)}
+      > 
         {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} style={{"cursor": "pointer"}} />
         ))}
         </Pie>
     </PieChart>
@@ -137,7 +130,6 @@ export const EloBucketsViewer = () => {
                 <Tab key={eloBucket.elo_bucket}
                     id={eloBucket.elo_bucket}
                     title={eloBucket.elo_min + " - " + eloBucket.elo_max} 
-                    // panel={<EloBucketViewer eloBucket={eloBucket.elo_bucket} />}
                 />
             )}
         </Tabs>
