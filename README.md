@@ -10,7 +10,7 @@
 
 ## Website
 
-The project is live [here](http://158.178.201.114/).
+The project is live [here](http://preausor.cf/).
 
 ## Milestone 1 (7th April, 5pm)
 
