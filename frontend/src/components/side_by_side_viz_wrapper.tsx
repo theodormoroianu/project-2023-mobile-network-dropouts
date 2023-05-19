@@ -17,13 +17,13 @@ function SideBySideVizWrapper<T>({ D3RendererMasterViz, D3RendererSlaveViz }: Si
         "width": "100%"
     }}>
         <div style={{ "width": "50%" }}>
-            <Card interactive={true} elevation={Elevation.TWO}>
+            <Card interactive={true} elevation={Elevation.TWO} style={{"height": "100%"}}>
                 <D3Wrapper D3Renderer={(selector) => D3RendererMasterViz(selector, setData)} />
             </Card>
         </div>
         <div style={{ "width": "5%" }}></div>
         <div style={{ "width": "45%" }}>
-            <Card interactive={false} elevation={Elevation.TWO}>
+            <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}>
                 {data !== null && <D3Wrapper D3Renderer={(selector) => D3RendererSlaveViz(selector, data as T)} redrawOnChange={true} />}
                 {data === null && <NonIdealState
                     icon={"search"}
