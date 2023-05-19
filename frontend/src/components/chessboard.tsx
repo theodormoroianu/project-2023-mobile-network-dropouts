@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Chessground } from 'chessground';
-import { Button } from '@blueprintjs/core';
+import { Button, NonIdealState } from '@blueprintjs/core';
 
 interface ChessBoardViewProps {
     setBoardStateCallback: (callback: (fen: string) => void) => void
@@ -85,6 +85,7 @@ interface ChessBoardFenExplorerProps {
     // Function to call in order to get fens to display, e.g. this function can be an API call.
     // The function returns the list of fens, and the index of the first fen to display.
     fensToDisplay: Promise <[string[], number]>
+    showNonIdealStateIfEmpty?: boolean
 };
 
 /** Allows the user to navigate a game, by going forward / backward in moves */
@@ -92,17 +93,34 @@ export const ChessBoardFenExplorer = ({ fensToDisplay }: ChessBoardFenExplorerPr
     let [fenCallback, setFenCallback] = useState<(fen: string) => void>(() => (value: string) => {
         console.log(`Ignored request for ${value} as callback was not registered!`);
     });
+    const [fensExist, setFensExist] = useState(false);
+
+    useEffect(() => {
+        fensToDisplay.then(fens => {
+            if (fens[0].length != 0)
+                setFensExist(true);
+        });
+    }, [fensToDisplay]);
 
     fensToDisplay.then((fens) => console.log(fens));
     // console.log("received as fens: " + fensToDisplay);
 
     return <div style={{
-            "display": "flex",
-            "flexDirection": "column",
-            "justifyContent": "center",
-            "padding": "30px",
-            "width": "100%"}}>
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "center",
+        "padding": "30px",
+        "width": "100%",
+        "height": "100%"
+    }}>
+        {fensExist && <>
             <ChessBoardView setBoardStateCallback={(x) => setFenCallback(() => x)} />
             <ChessBoardFenPicker setFen={fenCallback} fensToDisplay={fensToDisplay} />
+        </>}
+        {!fensExist && <NonIdealState
+            icon={"search"}
+            title={"Please select an ELO range."}
+            description={"To view the chessboard, please click on the apropriate ELO range entry."}
+        />}
     </div>
 }
