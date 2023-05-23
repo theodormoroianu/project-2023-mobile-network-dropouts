@@ -1,14 +1,26 @@
-import { NonIdealState, Tab, Tabs } from '@blueprintjs/core';
+import { Card, Elevation, NonIdealState, Tab, Tabs } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import { EloBucketList, EloBucketStats, FetchEloBucketStats } from '../api/elo_bucket_stats_api';
 import { FetchEloBucketList } from '../api/elo_bucket_stats_api';
 import { PieCharViewer } from './pie_chart_viewer';
 import ReactApexChart from 'react-apexcharts';
-import React from 'react';
 import { ApexOptions } from 'apexcharts';
 import { rgb } from 'd3';
 import { ChessBoardFenExplorer } from './chessboard';
 
+
+interface GeneralInformationStats{
+    eloBucketStats: EloBucketStats | null
+}
+
+const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
+    return <div style={{ "width": "30%" }}>
+    <Card interactive={true} elevation={Elevation.TWO} style={{"height": "100%"}}>
+        <h2 className={"bp4-monospace-text"}
+        >Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}</h2>
+    </Card>
+</div>
+}
 
 interface PlayersVictoryHeatmapStats {
     eloBucketStats: EloBucketStats | null
@@ -164,7 +176,7 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
 /** Shows statistics about a SINGLE elo range */
 const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
     let [eloBucketStats, setEloBucketStats] = useState<EloBucketStats | null>(null);
-    let [activeTab, setActiveTab] = useState("openings-chart");
+    let [activeTab, setActiveTab] = useState("general-information");
 
     useEffect(() => {
       FetchEloBucketStats(eloBucket).then(setEloBucketStats)
@@ -178,10 +190,12 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
             "top": "-20px"
         }}>
         <Tabs onChange={(newTab) => setActiveTab(newTab.toString())} selectedTabId={activeTab}>
+            <Tab id={"general-information"} title={"General Information"} />
             <Tab id={"openings-chart"} title={"Openings Frequency"} />
             <Tab id={"players-victory-heatmap"} title={"Players Victory Rate"} />
         </Tabs>
         <div style={{"paddingTop": "30px", "width": "100%", "height": "100%"}}>
+            {activeTab === "general-information" && <GeneralInformation eloBucketStats={eloBucketStats} />}
             {activeTab === "openings-chart" && <OpeningsChart eloBucketStats={eloBucketStats} />}
             {activeTab === "players-victory-heatmap" && <PlayersVictoryHeatmap eloBucketStats={eloBucketStats} />}
         </div>
