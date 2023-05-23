@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import D3Wrapper from './d3_wrapper';
 import { ChessBoardFenExplorer } from './chessboard';
-import { Card, Elevation, NonIdealState } from '@blueprintjs/core';
+import { Card, Elevation } from '@blueprintjs/core';
 
 interface ComponentAndChessboardSplitScreenProps {
     Component: ({ setFensToDisplay }: { setFensToDisplay: (fens: Promise<[string[], number]>) => void }) => JSX.Element
@@ -28,9 +28,10 @@ export const ComponentAndChessboardSplitScreen = ({ Component }: ComponentAndChe
 
 interface D3VizAndChessboardSplitScreenProps {
     d3Viz: (selector: string, setFens: (fens: Promise <[string[], number]>) => void) => void
+    redrawOnChange?: boolean
 };
 
-export const D3VizAndChessboardSplitScreen = ({ d3Viz }: D3VizAndChessboardSplitScreenProps) => {
+export const D3VizAndChessboardSplitScreen = ({ d3Viz, redrawOnChange }: D3VizAndChessboardSplitScreenProps) => {
     // initially, fensToDisplay is an empty promise (a promise that resolves to nothing).
     const [fensToDisplay, setFensToDisplay] = useState<Promise<[string[], number]>>(new Promise(() => [[], 0]));
     // true if the chessboard is displaying some fens.
@@ -43,15 +44,15 @@ export const D3VizAndChessboardSplitScreen = ({ d3Viz }: D3VizAndChessboardSplit
         "width": "100%"
         }}>
         <div style={{"width": "60%"}}>
-            <Card interactive={true} elevation={Elevation.TWO} style={{"height": "100%"}}> 
-                <D3Wrapper D3Renderer={(selector) => d3Viz(selector, setFensToDisplay)} />
-            </Card>
+            {/* <Card interactive={true} elevation={Elevation.TWO} style={{"height": "100%"}}>  */}
+                <D3Wrapper D3Renderer={(selector) => d3Viz(selector, setFensToDisplay)} redrawOnChange={redrawOnChange} />
+            {/* </Card> */}
         </div>
         <div style={{"width": "5%"}}></div>
         <div style={{"width": "35%"}}>
-        <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}>
+        {/* <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}> */}
             <ChessBoardFenExplorer fensToDisplay={fensToDisplay} showNonIdealStateIfEmpty={true} />
-        </Card>
+        {/* </Card> */}
         </div>
     </div>;
 }

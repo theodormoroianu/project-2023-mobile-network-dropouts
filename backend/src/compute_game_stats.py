@@ -13,6 +13,10 @@ import storage
 
 
 BUCKET_SIZE = 100
+
+# size of subbuckets, used when making heatmaps
+SUBBUCHET_SIZE = 10
+
 # Cap value for maximum number of moves played in a game in an elo bucket
 # If moves >= ..._CAPPED then it is replaced with CAPPED
 MAXIMAL_GAME_MOVES_CAPPED = 200
@@ -45,6 +49,12 @@ class ComputeGamesByAverageBucket:
         # (#white win, #black win, #draw)
         self.openings_outcomes = defaultdict(lambda: (0, 0, 0))
         self.nr_played_games = 0
+
+        # used to create a heatmap of how players of slighly different ELO beat each others.
+        self.games_won_heatmap = defaultdict(lambda: [
+            [{ "games_won": 0, "games_lost": 0, "sample_game": [] } for i in range(SUBBUCHET_SIZE)]
+            for j in range(SUBBUCHET_SIZE)
+        ])
 
     def process_new_game(self, game: pgn.Game, elo_bucket: int):
         h = game.headers
@@ -89,6 +99,18 @@ class ComputeGamesByAverageBucket:
 
         self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]] += 1
 
+        # compute heatmap data
+        b1, b2 = int(h["WhiteElo"]) % BUCKET_SIZE // SUBBUCHET_SIZE, int(h["BlackElo"]) % BUCKET_SIZE // SUBBUCHET_SIZE
+        if outcome[0] == 1 or outcome[1] == 1:
+            # one of them beat the other
+            if outcome[1] == 1:
+                # black beat white, reverse b1 and b2 so that b1 beats b2
+                b1, b2 = b2, b1
+            self.games_won_heatmap[elo_bucket][b1][b2]["games_won"] += 1
+            self.games_won_heatmap[elo_bucket][b2][b1]["games_lost"] += 1
+            if self.games_won_heatmap[elo_bucket][b1][b2]["sample_game"] == []:
+                # add sample game
+                self.games_won_heatmap[elo_bucket][b1][b2]["sample_game"] = generate_game_fens(game)
 
 
     def dump_stats(self):
@@ -147,7 +169,7 @@ class ComputeGamesByAverageBucket:
             elo_stats["average_length"] = self.total_length_game_by_elo_bucket[elo_bucket] / self.games_by_average_elo_buckets[elo_bucket],
             elo_stats["frq_games_by_nr_moves"] = self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket]
             elo_stats["most_used_openings_and_frq"] = most_used_openings_per_elo_bucket[elo_bucket]
-
+            elo_stats["games_won_heatmap"] = self.games_won_heatmap[elo_bucket]
 
 
 
@@ -166,7 +188,7 @@ def compute_stats_for_chunk(chunks: list[str]):
     db = open(active_chunk, "r")
 
     print(f"Parsing chunk {active_chunk}...")
-    for _ in tqdm(range(4 * generate_data.GAMES_PER_CHUNK)):
+    for _ in tqdm(range(3 * generate_data.GAMES_PER_CHUNK)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:
