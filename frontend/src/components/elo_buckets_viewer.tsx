@@ -137,7 +137,7 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
     let stats_data = eloBucketStats?.most_used_openings_and_frq
     let data: {name: string, value: number}[] = []
     stats_data?.forEach((value, key) => {
-      data.push({name: key, value: value})
+      data.push({name: key, value: value.nr_games})
     })
 
     // let [index, setIndex] = useState(0);

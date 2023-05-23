@@ -21,6 +21,8 @@ export const FetchEloBucketList = (): Promise <EloBucketList> => {
 
 export type GamesWonHeatmapType = {games_won: number, games_lost: number, sample_game: string[]}[][]
 
+export type MostUsedOpeningsAndFrqType = Map<string,  {nr_games: number, sample_game: string[]}>
+
 export interface EloBucketStats {
     "elo_min": number 
     "elo_max": number 
@@ -28,7 +30,7 @@ export interface EloBucketStats {
     "sample_game": string[],
     "average_length": number
     "frq_games_by_nr_moves": number[], 
-    "most_used_openings_and_frq": Map<string, number>
+    "most_used_openings_and_frq": MostUsedOpeningsAndFrqType
     "games_won_heatmap": GamesWonHeatmapType
 }
 
