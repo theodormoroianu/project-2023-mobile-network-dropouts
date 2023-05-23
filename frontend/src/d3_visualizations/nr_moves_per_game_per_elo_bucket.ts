@@ -25,7 +25,7 @@ export const NrMovesPerGamePerEloBucket = (selector: string, data: AverageGameLe
         .attr("x", 110)
         .attr("y", 75)
         .attr("font-size", "20px")
-        .text("Elo range: " + `${data.elo_min}`+ " - " + `${data.elo_max}`)
+        .text(`Elo range: ${data.elo_min} - ${data.elo_max}`)
 
     var xScale = d3.scaleLinear().range([0, width]),
         yScale = d3.scaleLinear().range([height, 0]);

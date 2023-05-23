@@ -18,16 +18,31 @@ function Root() {
                 <NavbarGroup align={Alignment.LEFT}>
                     <NavbarHeading>Chess Visualizer</NavbarHeading>
                     <NavbarDivider />
-                    <Button className={Classes.MINIMAL} icon="home" text="ELO" onClick={() => setView("elo_games_distribution")} />
-                    <Button className={Classes.MINIMAL} icon="document" text="Heat Map" onClick={() => setView("d3_chess")} />
-                    <Button className={Classes.MINIMAL} icon="model" text="Average Length" onClick={() => setView("average_game_length_his_viz")} />
-                    <Button className={Classes.MINIMAL} icon="comparison" text="ELO Specifics" onClick={() => setView("elo-specifics")} />
+                    <Button
+                        className={Classes.MINIMAL}
+                        icon="home"
+                        text="ELO"
+                        onClick={() => setView("elo_games_distribution")}
+                        active={view === "elo_games_distribution"}
+                    />
+                    <Button
+                        className={Classes.MINIMAL}
+                        icon="model" text="Average Length"
+                        onClick={() => setView("average_game_length_his_viz")}
+                        active={view === "average_game_length_his_viz"}
+                    />
+                    <Button
+                        className={Classes.MINIMAL}
+                        icon="comparison"
+                        text="ELO Specifics"
+                        onClick={() => setView("elo-specifics")}
+                        active={view === "elo-specifics"}
+                    />
                 </NavbarGroup>
             </Navbar>
             <div style={{ "width": "100%", "padding": "30px" }}>
                 {/* We display the view we are interested in. */}
                 {view === "elo_games_distribution" && <D3VizAndChessboardSplitScreen d3Viz={EloGamesDistributionViz} />}
-                {view === "d3_chess" && <D3VizAndChessboardSplitScreen d3Viz={HeatMapViz} />}
                 {view === "average_game_length_his_viz" &&
                     <SideBySideVizWrapper
                         D3RendererMasterViz={AverageGameLengthHistViz}

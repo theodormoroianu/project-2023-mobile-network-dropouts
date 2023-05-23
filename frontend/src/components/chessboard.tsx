@@ -97,12 +97,12 @@ export const ChessBoardFenExplorer = ({ fensToDisplay }: ChessBoardFenExplorerPr
 
     useEffect(() => {
         fensToDisplay.then(fens => {
-            if (fens[0].length != 0)
+            if (fens[0].length !== 0)
                 setFensExist(true);
         });
     }, [fensToDisplay]);
 
-    fensToDisplay.then((fens) => console.log(fens));
+    // fensToDisplay.then((fens) => console.log(fens));
     // console.log("received as fens: " + fensToDisplay);
 
     return <div style={{

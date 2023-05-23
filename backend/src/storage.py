@@ -76,8 +76,10 @@ class PerEloStats:
     # "average_length", 
     # "frq_games_by_nr_moves": [], 
     # "most_used_openings_and_frq": { str: int } 
-    # }
     # frq_games_by_nr_moves[i] = number of games in the specific elo bucket which lastes for i moves
     #                           i manually capped at 100 moves
+    # games_won_heatmap: [[{games_won: int, games_lost, sample_game: ["fen"]}]]
+    #       used to display a heatmap of how often players beat each other, depending on the small ELO diffs.
+    # }
     def __init__(self):
         self.per_elo_stats = dict()
