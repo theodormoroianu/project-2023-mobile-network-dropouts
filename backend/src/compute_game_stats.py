@@ -30,6 +30,11 @@ def generate_game_fens(game) -> List[str]:
         game = game.next()
     return fens
 
+class FrequencyOfOpeningByEloBucket:
+    def __init__(self):
+        self.nr_games = 0
+        self.sample_game = []
+
 class ComputeGamesByAverageBucket:
     def __init__(self):
         self.elo_buckets = set()
@@ -42,8 +47,9 @@ class ComputeGamesByAverageBucket:
         # total_nr_games...[elo_bucket][nr_moves] = nr of games played in the elo bucket 
         #                                           that lasted nr_moves 
         self.total_nr_of_games_by_length_by_elo_bucket = defaultdict(lambda: [0 for i in range(MAXIMAL_GAME_MOVES_CAPPED)])
-
-        self.frequency_of_openings_by_elo_bucket = defaultdict(lambda: defaultdict(lambda: 0))
+        # frequency_of_openings...[elo_bucket] = Specifc opening and it's frequency 
+        #                                        and a sample game
+        self.frequency_of_openings_by_elo_bucket = defaultdict(lambda: defaultdict(lambda: FrequencyOfOpeningByEloBucket()))
 
         self.openings_frequency = defaultdict(lambda: 0)
         # (#white win, #black win, #draw)
@@ -96,8 +102,11 @@ class ComputeGamesByAverageBucket:
         self.total_length_game_by_elo_bucket[elo_bucket] += nr_moves
         # increase the nr of games with this specific nr of moves
         self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket][min(nr_moves, MAXIMAL_GAME_MOVES_CAPPED - 1)] += 1
-
-        self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]] += 1
+        # increase the nr of games with this specific opening
+        self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]].nr_games += 1
+        # include a list of fens for a sample game with the speicifc opening
+        if len(self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]].sample_game) == 0:
+            self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]].sample_game = generate_game_fens(game)
 
         # compute heatmap data
         b1, b2 = int(h["WhiteElo"]) % BUCKET_SIZE // SUBBUCHET_SIZE, int(h["BlackElo"]) % BUCKET_SIZE // SUBBUCHET_SIZE
@@ -141,11 +150,14 @@ class ComputeGamesByAverageBucket:
         basic_stats.elo_average_to_frequency_of_opening = []
         most_used_openings_per_elo_bucket = dict()
         for elo_bucket in sorted_elo_buckets_openings:
-            frequency_by_name = self.frequency_of_openings_by_elo_bucket[elo_bucket]            
-            most_used_openings = sorted([(frequency_by_name[i], i) for i in frequency_by_name])[::-1]
+            frequency_by_name = self.frequency_of_openings_by_elo_bucket[elo_bucket]
+            most_used_openings = sorted([(frequency_by_name[i].nr_games, frequency_by_name[i].sample_game, i) for i in frequency_by_name])[::-1]
             if len(most_used_openings) > MAXIMUM_OPENINGS_CAPPED:
                 most_used_openings = most_used_openings[:MAXIMUM_OPENINGS_CAPPED]
-            most_used_openings_per_elo_bucket[elo_bucket] = { opening: frq for frq, opening in most_used_openings }
+            most_used_openings_per_elo_bucket[elo_bucket] = {
+                opening: { "nr_games": frq, "sample_game": fens }
+                for frq, fens, opening in most_used_openings
+            }
 
         for elo_bucket in sorted_elo_buckets_openings:
             item = {
@@ -188,7 +200,7 @@ def compute_stats_for_chunk(chunks: list[str]):
     db = open(active_chunk, "r")
 
     print(f"Parsing chunk {active_chunk}...")
-    for _ in tqdm(range(3 * generate_data.GAMES_PER_CHUNK)):
+    for _ in tqdm(range(4 * generate_data.GAMES_PER_CHUNK)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:

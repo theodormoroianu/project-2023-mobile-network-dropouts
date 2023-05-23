@@ -75,7 +75,7 @@ class PerEloStats:
     # "sample_game": ["fen"],
     # "average_length", 
     # "frq_games_by_nr_moves": [], 
-    # "most_used_openings_and_frq": { str: int } 
+    # "most_used_openings_and_frq": { str: {nr_games: int, sample_game: ["fen"]} } 
     # frq_games_by_nr_moves[i] = number of games in the specific elo bucket which lastes for i moves
     #                           i manually capped at 100 moves
     # games_won_heatmap: [[{games_won: int, games_lost, sample_game: ["fen"]}]]

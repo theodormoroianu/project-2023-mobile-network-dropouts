@@ -64,11 +64,12 @@ const renderActiveShape = (props: any) => {
   };
   
 interface PieChartViewerProps {
-  data: { name: string, value: number }[]
+  data: { name: string, value: number, sample_game: string[] }[]
+  setFensToDisplay: (fens: Promise<[string[], number]>) => void
 }
 
 /** Renders a Pie Chart */
-export const PieCharViewer = ({ data } : PieChartViewerProps) => {
+export const PieCharViewer = ({ data, setFensToDisplay } : PieChartViewerProps) => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#e3b505", "#d08e07", "#bc6709", "#95190c", "#7b0e29", "#610345", "#394161", "#107e7d", "#0a657e"];
 
   let [index, setIndex] = useState(0);
@@ -86,6 +87,9 @@ export const PieCharViewer = ({ data } : PieChartViewerProps) => {
       fill="#8884d8"
       dataKey="value"
       onMouseEnter={(_, index) => setIndex(index)}
+      onClick={(a, index) => {
+        setFensToDisplay(Promise.resolve([a.sample_game, 0]))
+      }}
       onMouseOver={(_, index) => setIndex(index)}
     > 
       {data.map((entry, index) => (
