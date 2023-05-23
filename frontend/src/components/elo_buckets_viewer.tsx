@@ -134,14 +134,15 @@ interface OpeningsChartStats {
     eloBucketStats: EloBucketStats | null
 }
 const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
+    const [fensToDisplay, setFensToDisplay] = useState<Promise<[string[], number]>>(new Promise(() => [[], 0]));
     let stats_data = eloBucketStats?.most_used_openings_and_frq
-    let data: {name: string, value: number}[] = []
+    let data: {name: string, value: number, sample_game: string[]}[] = []
     stats_data?.forEach((value, key) => {
-      data.push({name: key, value: value.nr_games})
+      data.push({name: key, value: value.nr_games, sample_game: value.sample_game})
     })
 
     // let [index, setIndex] = useState(0);
-    let pie_chart_data = data.map(d => ({ name: d.name, value: d.value }));
+    // let pie_chart_data = data.map(d => ({ name: d.name, value: d.value }));
     return <div style={{
         "display": "flex",
         "height": "100%",
@@ -149,15 +150,18 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
         "flexDirection": "row",
         "justifyContent": "space-between"
     }}>
-        {/* <div style={{
+        <div style={{
             "width": "60%",
             "height": "100%",
-        }}> */}
-            <PieCharViewer data={pie_chart_data} />
-        {/* </div>
-        <div>
-            <ChessBoardFenExplorer fensToDisplay={Promise.resolve([[], 0])} />
-        </div> */}
+        }}>
+            <PieCharViewer data={data} setFensToDisplay={setFensToDisplay} />
+        </div>
+        <div style={{
+            "width": "35%",
+            "height": "100%",
+        }}>
+            <ChessBoardFenExplorer fensToDisplay={fensToDisplay} showNonIdealStateIfEmpty={true} />
+        </div>
     </div>;
 }
 
