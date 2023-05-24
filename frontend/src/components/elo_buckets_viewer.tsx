@@ -14,12 +14,55 @@ interface GeneralInformationStats{
 }
 
 const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
-    return <div style={{ "width": "30%" }}>
-    <Card interactive={true} elevation={Elevation.TWO} style={{"height": "100%"}}>
-        <h2 className={"bp4-monospace-text"}
-        >Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}</h2>
-    </Card>
-</div>
+
+    let series = [eloBucketStats?.nr_games.toPrecision(4)]
+    let options: ApexOptions = {
+        chart: {
+            height: 350,
+            type: 'radialBar',
+        },
+        plotOptions: {
+            radialBar: {
+                hollow: {
+                    size: '60%',
+                }
+            },
+        },
+        labels: ['Total Games'],
+    }
+    return <div style={{
+        "display": "flex",
+        "flexDirection": "row",
+        "width": "70%"
+    }}>
+    <div style={{
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "70%"
+    }}>
+        <div style={{ "width": "70%", "paddingBottom": "10px" }}>
+            <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}>
+                <h2 className={"bp4-monospace-text"}
+                >Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}</h2>
+            </Card>
+        </div>
+        <div style={{ "width": "70%" }}>
+            <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}>
+            <div style={{"width": "100%"}}>
+            {/* @ts-ignore */}
+            <ReactApexChart options={options} series={series} type="radialBar" height={350} width={350} />
+            </div>
+            </Card>
+        </div>
+    </div>
+    <div style={{ "width": "50%"}}>
+        <Card interactive={false} elevation={Elevation.TWO} style={{"height": "20%"}}>
+        <h3 className={"bp4-monospace-text"}
+                >Frequent Openings</h3>
+        <br></br>
+        </Card>
+    </div>
+</div> 
 }
 
 interface PlayersVictoryHeatmapStats {
