@@ -27,13 +27,14 @@ export type MostUsedTimecontrolsAndFrqType = Map<string, number>
 
 export interface EloBucketStats {
     "elo_min": number 
-    "elo_max": number 
+    "elo_max": number
+    "total_nr_games_in_elo_bucket": number
     "nr_games": number
     "sample_game": string[],
     "average_length": number
     "frq_games_by_nr_moves": number[], 
     "most_used_openings_and_frq": MostUsedOpeningsAndFrqType
-    "most_used_timecontrols_per_elo_bucket": MostUsedTimecontrolsAndFrqType
+    "most_used_timecontrols_and_frq": MostUsedTimecontrolsAndFrqType
     "games_won_heatmap": GamesWonHeatmapType
 }
 
@@ -45,6 +46,7 @@ export const FetchEloBucketStats = (elo_bucket: number) : Promise<EloBucketStats
     return fetch(`/api/per-elo-stats/get-stats/${elo_bucket}`).then(response => {
             return response.json().then(data => {
                 data["most_used_openings_and_frq"] = new Map(Object.entries(data["most_used_openings_and_frq"]));
+                data["most_used_timecontrols_and_frq"] = new Map(Object.entries(data["most_used_timecontrols_and_frq"]));
                 return data;
             })
         }

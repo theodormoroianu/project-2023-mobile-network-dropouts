@@ -15,21 +15,71 @@ interface GeneralInformationStats{
 
 const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
 
-    let series = [eloBucketStats?.nr_games.toPrecision(4)]
+    let series: string[] = []
+    eloBucketStats?.most_used_timecontrols_and_frq.forEach((value, key) => {
+        series.push(
+            "" + (value / eloBucketStats.total_nr_games_in_elo_bucket * 100).toPrecision(3)
+        )
+    })
+    
     let options: ApexOptions = {
         chart: {
-            height: 350,
+            height: 600,
             type: 'radialBar',
         },
         plotOptions: {
             radialBar: {
+                offsetY: 0,
+                startAngle: 0,
+                endAngle: 270,
                 hollow: {
-                    size: '60%',
+                  margin: 5,
+                  size: '20%',
+                  background: 'transparent',
+                  image: undefined,
+                },
+                dataLabels: {
+                //   name: {
+                //     show: false,
+                //   },
+                //   value: {
+                //     show: false,
+                //   }
                 }
-            },
+              }
         },
-        labels: ['Total Games'],
-    }
+        // colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5', "#0077B5"],
+        labels: Array.from(eloBucketStats?.most_used_timecontrols_and_frq.keys()??[]),
+        legend: {
+          show: true,
+          floating: true,
+          fontSize: '12px',
+          position: 'left',
+          offsetX: 50,
+          offsetY: 0,
+          labels: {
+            useSeriesColors: true,
+          },
+          horizontalAlign: "right",
+          markers: {
+            radius: 0
+          },
+        //   formatter: function(seriesName, opts) {
+        //     return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+        //   },
+          itemMargin: {
+            vertical: 3
+          }
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+                show: false
+            }
+          }
+        }]
+        };
     return <div style={{
         "display": "flex",
         "flexDirection": "row",
@@ -41,26 +91,23 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
         "width": "70%"
     }}>
         <div style={{ "width": "70%", "paddingBottom": "10px" }}>
-            <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}>
-                <h2 className={"bp4-monospace-text"}
-                >Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}</h2>
-            </Card>
+            <h2 className={"bp4-monospace-text"}
+            >Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}</h2>
+
         </div>
         <div style={{ "width": "70%" }}>
-            <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}>
+            
             <div style={{"width": "100%"}}>
             {/* @ts-ignore */}
             <ReactApexChart options={options} series={series} type="radialBar" height={350} width={350} />
             </div>
-            </Card>
         </div>
     </div>
     <div style={{ "width": "50%"}}>
-        <Card interactive={false} elevation={Elevation.TWO} style={{"height": "20%"}}>
+        
         <h3 className={"bp4-monospace-text"}
                 >Frequent Openings</h3>
         <br></br>
-        </Card>
     </div>
 </div> 
 }

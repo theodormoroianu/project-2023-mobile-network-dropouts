@@ -72,5 +72,5 @@ export const NrMovesPerGamePerEloBucket = (selector: string, data: AverageGameLe
         .attr("y", (idx) => yScale(data.frq_games_by_nr_moves[idx]))
         .attr("width", xScale(1) - xScale(0))
         .attr("height", (idx) => height - yScale(data.frq_games_by_nr_moves[idx]))
-        .attr("fill", "rgb(205,162,120)")
+        .attr("fill", "rgb(161, 181, 216)")
 }
