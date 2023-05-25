@@ -16,14 +16,14 @@ def parse_line(line):
 countries = defaultdict(lambda: [])
 
 for player, country, rating in [parse_line(i) for i in data]:
-    countries[country].append((player, rating))
+    countries[country].append((rating, player))
 
 OUTPUT_FILE = "country_code_to_rating.csv"
 data = []
 
 for country in countries:
     max_rating = max(countries[country])
-    data.append((country, max_rating[1], max_rating[0].replace(',', '')))
+    data.append((country, max_rating[0], max_rating[1].replace(',', '')))
 
 data.sort(key=lambda x: x[1], reverse=True)
 

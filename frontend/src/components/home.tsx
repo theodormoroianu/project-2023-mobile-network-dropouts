@@ -12,10 +12,10 @@ export const Map = memo(() => {
   const countryCodeToRatingURL = "/map/country_code_to_rating.csv";
 
   const colorScale = scaleQuantile<string>()
-    .domain([1000, 2500])
-    .range(["#ffedea", "#ffcec5", "#ffad9f", "#ff8a75",
-      "#ff5533", "#e2492d", "#be3d26", "#9a311f", "#782618"]);
-  const DEFAULT_COLOR = "#EEE";
+    .domain([1500, 2800])
+    .range(["#ffedea", "#ffcec5", "#ffbea5", "#ffad9f", "#ff8a75",
+      "#ff5533", "#e2492d", "#e05c46", "#c24329", "#be3d26", "#782618"]);
+  const DEFAULT_COLOR = "#BBB";
 
   const [tooltipContent, setTooltipContent] = useState<JSX.Element | undefined>(undefined);
   const [countryCodeToRating, setCountryCodeToRating] = useState<DSVRowArray<string>>();
@@ -41,27 +41,37 @@ export const Map = memo(() => {
               const country = geo.properties.name;
               const rating = countryCodeToRating?.find(
                 (s) => s.code === geo["id"]
-              )?.best_rating;
+              );
 
               return (
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
-                  fill={rating ? colorScale(+rating) : DEFAULT_COLOR}
+                  fill={rating?.best_rating ? colorScale(+(rating?.best_rating)) : DEFAULT_COLOR}
                   onMouseEnter={() => {
-                    setTooltipContent(<div>{country}<br/>{rating??"Unknown"}</div>);
+                    setTooltipContent(<div style={{textAlign: "center"}}>
+                      {country}
+                      <br/>
+                      {rating?.best_player??"Unknown"}
+                      <br/>
+                      ELO of {rating?.best_rating??"Unknown"}
+                    </div>);
                   }}
                   onMouseLeave={() => {
                     setTooltipContent(undefined);
                   }}
                   style={{
                     default: {
-                      outline: "none"
+                      outline: "none",
+                      stroke: "#FFFFFF",
+                      strokeWidth: 0.2,
                     },
                     hover: {
                       fill: "#ff6200",
-                      transition: "all 250ms",
-                      outline: "none"
+                      // transition: "all 150ms",
+                      outline: "none",
+                      stroke: "#FFFFFF",
+                      strokeWidth: 1,
                     },
                     pressed: {
                       outline: "none"
@@ -75,6 +85,15 @@ export const Map = memo(() => {
       </ComposableMap>
       {/* @ts-ignore */}
       <Tooltip>{tooltipContent}</Tooltip>
+      <p style={{
+        position: "relative",
+        top: "-25px",
+        left: "50%",
+        zIndex: "1000",
+        fontSize: "9px"
+      }}>
+        Data taken from <a href="https://ratings.fide.com/download.phtml">FIDE</a>.
+      </p>
     </div>
   );
 });
