@@ -23,6 +23,8 @@ export type GamesWonHeatmapType = {games_won: number, games_lost: number, sample
 
 export type MostUsedOpeningsAndFrqType = Map<string,  {nr_games: number, sample_game: string[]}>
 
+export type MostUsedTimecontrolsAndFrqType = Map<string, number>
+
 export interface EloBucketStats {
     "elo_min": number 
     "elo_max": number 
@@ -31,6 +33,7 @@ export interface EloBucketStats {
     "average_length": number
     "frq_games_by_nr_moves": number[], 
     "most_used_openings_and_frq": MostUsedOpeningsAndFrqType
+    "most_used_timecontrols_per_elo_bucket": MostUsedTimecontrolsAndFrqType
     "games_won_heatmap": GamesWonHeatmapType
 }
 

@@ -21,7 +21,11 @@ SUBBUCHET_SIZE = 10
 # If moves >= ..._CAPPED then it is replaced with CAPPED
 MAXIMAL_GAME_MOVES_CAPPED = 200
 
+# Cap the value of openings analyzed
 MAXIMUM_OPENINGS_CAPPED = 30
+
+# Cap the value of timecontrol games
+MAXIMUM_TIMECONTROLS = 5
 
 def generate_game_fens(game) -> List[str]:
     fens = []
@@ -47,7 +51,7 @@ class ComputeGamesByAverageBucket:
         # total_nr_games...[elo_bucket][nr_moves] = nr of games played in the elo bucket 
         #                                           that lasted nr_moves 
         self.total_nr_of_games_by_length_by_elo_bucket = defaultdict(lambda: [0 for i in range(MAXIMAL_GAME_MOVES_CAPPED)])
-        # frequency_of_openings...[elo_bucket] = Specifc opening and it's frequency 
+        # frequency_of_openings...[elo_bucket] = Specifc opening and its frequency 
         #                                        and a sample game
         self.frequency_of_openings_by_elo_bucket = defaultdict(lambda: defaultdict(lambda: FrequencyOfOpeningByEloBucket()))
 
@@ -61,6 +65,9 @@ class ComputeGamesByAverageBucket:
             [{ "games_won": 0, "games_lost": 0, "sample_game": [] } for i in range(SUBBUCHET_SIZE)]
             for j in range(SUBBUCHET_SIZE)
         ])
+
+        # timecontrol_per_elo_bucket[elo_bucket] = specifc trimecontrol and its frequency
+        self.timecontrol_per_elo_bucket = defaultdict(lambda: defaultdict(lambda: 0))
 
     def process_new_game(self, game: pgn.Game, elo_bucket: int):
         h = game.headers
@@ -107,6 +114,8 @@ class ComputeGamesByAverageBucket:
         # include a list of fens for a sample game with the speicifc opening
         if len(self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]].sample_game) == 0:
             self.frequency_of_openings_by_elo_bucket[elo_bucket][h["Opening"]].sample_game = generate_game_fens(game)
+        # increase the nr of games for a specifc timecontrol
+        self.timecontrol_per_elo_bucket[elo_bucket][h["TimeControl"]] += 1
 
         # compute heatmap data
         b1, b2 = int(h["WhiteElo"]) % BUCKET_SIZE // SUBBUCHET_SIZE, int(h["BlackElo"]) % BUCKET_SIZE // SUBBUCHET_SIZE
@@ -167,6 +176,18 @@ class ComputeGamesByAverageBucket:
             }
             basic_stats.elo_average_to_frequency_of_opening.append(item)
 
+        # Compute the most used timecontrols per elo bucket stats
+        sorted_elo_buckets_timecontrols = sorted([i for i in self.timecontrol_per_elo_bucket])
+        most_used_timecontrols_per_elo_bucket = dict()
+        for elo_bucket in sorted_elo_buckets_timecontrols:
+            frequency_by_timecontrol = self.timecontrol_per_elo_bucket[elo_bucket]
+            most_used_timecontrols = sorted([(frequency_by_timecontrol[i], i) for i in frequency_by_timecontrol])[::-1]
+            if len(most_used_timecontrols) > MAXIMUM_TIMECONTROLS:
+                most_used_timecontrols = most_used_timecontrols[:MAXIMUM_TIMECONTROLS]
+            most_used_timecontrols_per_elo_bucket[elo_bucket] = {
+                timecontrol: frq 
+                for frq, timecontrol in most_used_timecontrols
+            }
 
         # Populate "elo_min", "elo_max", "nr_games", "sample_game": ["fen"]"average_length", "frq_games_by_nr_moves": [], "most_used_openings_and_frq": { str: int }
         for elo_bucket in self.elo_buckets:
@@ -176,11 +197,13 @@ class ComputeGamesByAverageBucket:
 
             elo_stats["elo_min"] = elo_bucket * BUCKET_SIZE
             elo_stats["elo_max"] = elo_bucket * BUCKET_SIZE + BUCKET_SIZE - 1
+            elo_stats["total_nr_games_in_elo_bucket"] = self.games_by_average_elo_buckets[elo_bucket]
             elo_stats["nr_games"] = self.games_by_average_elo_buckets[elo_bucket] / self.nr_played_games * 100
             elo_stats["sample_game"] = self.sample_game_for_average_elo_buckets[elo_bucket]
             elo_stats["average_length"] = self.total_length_game_by_elo_bucket[elo_bucket] / self.games_by_average_elo_buckets[elo_bucket],
             elo_stats["frq_games_by_nr_moves"] = self.total_nr_of_games_by_length_by_elo_bucket[elo_bucket]
             elo_stats["most_used_openings_and_frq"] = most_used_openings_per_elo_bucket[elo_bucket]
+            elo_stats["most_used_timecontrols_and_frq"] = most_used_timecontrols_per_elo_bucket[elo_bucket]
             elo_stats["games_won_heatmap"] = self.games_won_heatmap[elo_bucket]
 
 

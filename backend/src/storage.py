@@ -70,7 +70,8 @@ class PerEloStats:
     """
     # dict of dicts of type elo_bucket : {
     # "elo_min", 
-    # "elo_max", 
+    # "elo_max",
+    # "total_nr_games_in_elo_bucket" 
     # "nr_games",
     # "sample_game": ["fen"],
     # "average_length", 
@@ -78,6 +79,7 @@ class PerEloStats:
     # "most_used_openings_and_frq": { str: {nr_games: int, sample_game: ["fen"]} } 
     # frq_games_by_nr_moves[i] = number of games in the specific elo bucket which lastes for i moves
     #                           i manually capped at 100 moves
+    # "most_used_timecontrols_and_frq": {str: int}
     # games_won_heatmap: [[{games_won: int, games_lost, sample_game: ["fen"]}]]
     #       used to display a heatmap of how often players beat each other, depending on the small ELO diffs.
     # }
