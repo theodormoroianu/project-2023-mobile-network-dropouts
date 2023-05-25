@@ -1,14 +1,116 @@
-import { NonIdealState, Tab, Tabs } from '@blueprintjs/core';
+import { Card, Elevation, NonIdealState, Tab, Tabs } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import { EloBucketList, EloBucketStats, FetchEloBucketStats } from '../api/elo_bucket_stats_api';
 import { FetchEloBucketList } from '../api/elo_bucket_stats_api';
 import { PieCharViewer } from './pie_chart_viewer';
 import ReactApexChart from 'react-apexcharts';
-import React from 'react';
 import { ApexOptions } from 'apexcharts';
 import { rgb } from 'd3';
 import { ChessBoardFenExplorer } from './chessboard';
 
+
+interface GeneralInformationStats{
+    eloBucketStats: EloBucketStats | null
+}
+
+const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
+
+    let series: string[] = []
+    eloBucketStats?.most_used_timecontrols_and_frq.forEach((value, key) => {
+        series.push(
+            "" + (value / eloBucketStats.total_nr_games_in_elo_bucket * 100).toPrecision(3)
+        )
+    })
+    
+    let options: ApexOptions = {
+        chart: {
+            height: 600,
+            type: 'radialBar',
+        },
+        plotOptions: {
+            radialBar: {
+                offsetY: 0,
+                startAngle: 0,
+                endAngle: 270,
+                hollow: {
+                  margin: 5,
+                  size: '20%',
+                  background: 'transparent',
+                  image: undefined,
+                },
+                dataLabels: {
+                //   name: {
+                //     show: false,
+                //   },
+                //   value: {
+                //     show: false,
+                //   }
+                }
+              }
+        },
+        // colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5', "#0077B5"],
+        labels: Array.from(eloBucketStats?.most_used_timecontrols_and_frq.keys()??[]),
+        legend: {
+          show: true,
+          floating: true,
+          fontSize: '12px',
+          position: 'left',
+          offsetX: 50,
+          offsetY: 0,
+          labels: {
+            useSeriesColors: true,
+          },
+          horizontalAlign: "right",
+          markers: {
+            radius: 0
+          },
+        //   formatter: function(seriesName, opts) {
+        //     return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+        //   },
+          itemMargin: {
+            vertical: 3
+          }
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+                show: false
+            }
+          }
+        }]
+        };
+    return <div style={{
+        "display": "flex",
+        "flexDirection": "row",
+        "width": "70%"
+    }}>
+    <div style={{
+        "display": "flex",
+        "flexDirection": "column",
+        "width": "70%"
+    }}>
+        <div style={{ "width": "70%", "paddingBottom": "10px" }}>
+            <h2 className={"bp4-monospace-text"}
+            >Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}</h2>
+
+        </div>
+        <div style={{ "width": "70%" }}>
+            
+            <div style={{"width": "100%"}}>
+            {/* @ts-ignore */}
+            <ReactApexChart options={options} series={series} type="radialBar" height={350} width={350} />
+            </div>
+        </div>
+    </div>
+    <div style={{ "width": "50%"}}>
+        
+        <h3 className={"bp4-monospace-text"}
+                >Frequent Openings</h3>
+        <br></br>
+    </div>
+</div> 
+}
 
 interface PlayersVictoryHeatmapStats {
     eloBucketStats: EloBucketStats | null
@@ -168,7 +270,7 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
 /** Shows statistics about a SINGLE elo range */
 const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
     let [eloBucketStats, setEloBucketStats] = useState<EloBucketStats | null>(null);
-    let [activeTab, setActiveTab] = useState("openings-chart");
+    let [activeTab, setActiveTab] = useState("general-information");
 
     useEffect(() => {
       FetchEloBucketStats(eloBucket).then(setEloBucketStats)
@@ -182,10 +284,12 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
             "top": "-20px"
         }}>
         <Tabs onChange={(newTab) => setActiveTab(newTab.toString())} selectedTabId={activeTab}>
+            <Tab id={"general-information"} title={"General Information"} />
             <Tab id={"openings-chart"} title={"Openings Frequency"} />
             <Tab id={"players-victory-heatmap"} title={"Players Victory Rate"} />
         </Tabs>
         <div style={{"paddingTop": "30px", "width": "100%", "height": "100%"}}>
+            {activeTab === "general-information" && <GeneralInformation eloBucketStats={eloBucketStats} />}
             {activeTab === "openings-chart" && <OpeningsChart eloBucketStats={eloBucketStats} />}
             {activeTab === "players-victory-heatmap" && <PlayersVictoryHeatmap eloBucketStats={eloBucketStats} />}
         </div>

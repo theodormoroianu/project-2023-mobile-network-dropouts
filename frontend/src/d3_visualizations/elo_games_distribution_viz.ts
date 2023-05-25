@@ -70,7 +70,7 @@ export const EloGamesDistributionViz = (selector: string, setFens: (fens: Promis
             .attr("y", (d) => yScale(d.nr_games))
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => height - yScale(d.nr_games))
-            .attr("fill", "rgb(30,129,176)")
+            .attr("fill", "rgb(147, 198, 224)")
             .on("click", (event: any, obj: BasicEloGameStat) => {
                 console.log("Clicked!", obj)
                 setFens(Promise.resolve([obj.sample_game, 0]))
@@ -78,12 +78,12 @@ export const EloGamesDistributionViz = (selector: string, setFens: (fens: Promis
             .on("mouseover", function(this: SVGRectElement, event: any, obj: BasicEloGameStat) {
                 d3.select(this)
                 .style("stroke", "black")
-                .attr("fill", "rgb(20,82,146)")
+                .attr("fill", "rgb(127, 198, 224)")
             })
             .on("mouseleave", function(this: SVGRectElement, event: any, obj: BasicEloGameStat) {
                 d3.select(this)
                 .style("stroke", "none")
-                .attr("fill", "rgb(30,129,176)")
+                .attr("fill", "rgb(147, 198, 224)")
             })
     }).catch(err => console.log(err));
 }

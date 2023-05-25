@@ -70,7 +70,7 @@ export const AverageGameLengthHistViz = (selector: string, setSlaveData: (data: 
             .attr("y", (d) => yScale(d.average_length))
             .attr("width", xScale.bandwidth())
             .attr("height", (d) => height - yScale(d.average_length))
-            .attr("fill", "rgb(117,55,66)")
+            .attr("fill", "rgb(82, 183, 136)")
             .on("click", (event: any, obj: AverageGameLengthStat) => {
                 console.log("Clicked!", obj)
                 setSlaveData(obj)
@@ -78,12 +78,12 @@ export const AverageGameLengthHistViz = (selector: string, setSlaveData: (data: 
             .on("mouseover", function(this: SVGRectElement, event: any, obj: AverageGameLengthStat) {
                 d3.select(this)
                 .style("stroke", "black")
-                .attr("fill", "rgb(157,75,96)")
+                .attr("fill", "rgb(62, 163, 106)")
             })
             .on("mouseleave", function(this: SVGRectElement, event: any, obj: AverageGameLengthStat) {
                 d3.select(this)
                 .style("stroke", "none")
-                .attr("fill", "rgb(117,55,66)")
+                .attr("fill", "rgb(82, 183, 136)")
             })
     }).catch(err => console.log(err));
 }
