@@ -48,3 +48,23 @@ g:focus {
 g {
   cursor: pointer;
 }
+
+.react-markdown h1 {
+  font-size: 30px;
+  font-family: "Trebuchet MS";
+  color: #444444;
+}
+
+.react-markdown h2 {
+  font-size: 30px;
+  font-family: "Trebuchet MS";
+  color: #444444;
+  margin-bottom: 10px;
+}
+
+.react-markdown p, li {
+  font-size: 20px;
+  font-family: "Trebuchet MS";
+  color: #333333;
+  margin-bottom: 0px;
+}

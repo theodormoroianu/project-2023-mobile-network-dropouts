@@ -4,6 +4,8 @@ import { scaleQuantile } from "d3-scale";
 import Tooltip from "react-tooltip";
 import { csv } from "d3-fetch";
 import { DSVRowArray } from "d3";
+import ReactMarkdown from "react-markdown"
+import remarkGfm from 'remark-gfm'
 
 export const Map = memo(() => {
   const geoUrl = "/map/map.json";
@@ -77,17 +79,65 @@ export const Map = memo(() => {
   );
 });
 
-const Intro = () => {
+const Title = () => {
   return <>
-  <h1>Chess Visualizer</h1>
-  <p>This will soon be made in markdown...</p>
+  <div style={{
+    paddingTop: "20px",
+    paddingBottom: "20px",
+    margin: "auto",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+  }}>
+    <h1 style={{
+      fontSize: "50px",
+      color: "#333333",
+      fontFamily: "georgia",
+      alignSelf: "center",
+    }}>Chess Visualizer</h1>
+    <p style={{
+      width: "600px",
+      marginTop: "-10px",
+      fontSize: "20px",
+      color: "#555555",
+      alignSelf: "center",
+      fontFamily: "Trebuchet MS",
+    }}>Visualize and understand statistics based on chess games played on <a href="https://lichess.org/">lichess</a>, using interactive  plots and charts.</p>
+  </div>
   </>
+}
+
+const Content = () => {
+  const s = [
+    "## Introduction",
+    "_*Chess Visualizer*_ is a tool for visualizing data about chess games. This data includes:",
+    " * The average ELO of online players.\n * The average length of games (by number of moves).\n" +
+    " * Various statistics generated independently for multiple _ELO ranges_ (i.e. various skill level).",
+    "## Who is part of the target audience?",
+    "**Short answer:** Anybody.",
+    "**Long answer:** Someone looking to improve their chess level, by analysing how players of various skills tackle games, including data such as the most frequent openings played for each skill level, sample games visualized on an interactive board, or how games played between players of slightly different skill usually end.",
+    "## Origin of the data",
+    "All of the analized data comes from [lichess](https://lichess.org), a free-to-play, open-source and multiplayer chess website, where users of any skill from all around the world play together.",
+    "In April 2023 alone, `101,706,224` games were played on _lichess_ (or roughly `40` new games per second), all of which are publicly available to download on their [database page](https://database.lichess.org/)."
+  ];
+
+  return <div className="react-markdown">
+      {s.map(el => 
+        <ReactMarkdown  remarkPlugins={[remarkGfm]} children={el} />
+      )}
+  </div>
 }
 
 export const Home = () => {
   return <div>
-    <Intro />
+    <Title />
     <Map />
-    {/* <p>Text after</p> */}
+    <div style={{
+      paddingLeft: "20%",
+      paddingRight: "20%",
+      marginBottom: "300px"
+    }}>
+      <Content />
+    </div>
   </div>
 }
