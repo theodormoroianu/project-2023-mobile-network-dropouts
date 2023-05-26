@@ -4,6 +4,7 @@ Name is really bad. Should change it.
 This module tries to replicate what "stats.py" did.
 """
 
+import random
 from typing import List
 import chess.pgn as pgn
 from collections import defaultdict
@@ -26,6 +27,9 @@ MAXIMUM_OPENINGS_CAPPED = 30
 
 # Cap the value of timecontrol games
 MAXIMUM_TIMECONTROLS = 5
+
+# Proportion of games we compute the moves of, for heatmaps
+PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP = 0.2
 
 def generate_game_fens(game) -> List[str]:
     fens = []
@@ -163,14 +167,15 @@ class ComputeGamesByAverageBucket:
                                     [[0] * 8 for _ in range(8)]
                         self.piece_pos_heatmap[elo_bucket][string_key][row][col] += 1
 
-        board = game.board()
-        process_board(board, 0)
+        if random.random() < PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP:
+            board = game.board()
+            process_board(board, 0)
 
-        move_no = 1
-        for move in game.mainline_moves():
-            board.push(move)
-            process_board(board, move_no)
-            move_no += 1
+            move_no = 1
+            for move in game.mainline_moves():
+                board.push(move)
+                process_board(board, move_no)
+                move_no += 1
 
 
     def dump_stats(self):
