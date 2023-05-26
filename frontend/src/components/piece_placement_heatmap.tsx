@@ -14,7 +14,11 @@ interface HeatmapStats {
 const Heatmap = ({ eloBucketStats, pieceType, moveNo, playerColor }: HeatmapStats) => {
     if (eloBucketStats === null || eloBucketStats === undefined)
         return <div><p>Loading...</p></div>;
-    
+   
+    let lookupKey = `${playerColor}|${pieceType}|${moveNo}`;
+    let heatmapData = eloBucketStats.pieces_pos_heatmap.get(lookupKey);
+    console.log(heatmapData)
+
     let series = eloBucketStats.games_won_heatmap.map((row, index) =>
         {return {
 
