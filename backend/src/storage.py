@@ -83,5 +83,7 @@ class PerEloStats:
     # games_won_heatmap: [[{games_won: int, games_lost, sample_game: ["fen"]}]]
     #       used to display a heatmap of how often players beat each other, depending on the small ELO diffs.
     # }
+    # pieces_pos_heatmap: {(player_color, piece_type, move_number): [[int]]}
+    #       used to display a heatmap of the positions of each piece through a game in a speciffic ELO bucket
     def __init__(self):
         self.per_elo_stats = dict()

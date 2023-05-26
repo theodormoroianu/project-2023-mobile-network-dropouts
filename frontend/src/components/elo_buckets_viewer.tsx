@@ -1,4 +1,4 @@
-import { Card, Elevation, NonIdealState, Tab, Tabs } from '@blueprintjs/core';
+import { Card, Elevation, NonIdealState, Tab, Tabs, Checkbox } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import { EloBucketList, EloBucketStats, FetchEloBucketStats } from '../api/elo_bucket_stats_api';
 import { FetchEloBucketList } from '../api/elo_bucket_stats_api';
@@ -7,6 +7,7 @@ import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { rgb } from 'd3';
 import { ChessBoardFenExplorer } from './chessboard';
+import PiecesPositionsHeatmap from './piece_placement_heatmap';
 
 
 interface GeneralInformationStats{
@@ -228,6 +229,7 @@ const PlayersVictoryHeatmap = ({ eloBucketStats }: PlayersVictoryHeatmapStats) =
     </div>)
 }
 
+
 interface EloBucketViewerProps {
     eloBucket: number
 }
@@ -287,11 +289,13 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
             <Tab id={"general-information"} title={"General Information"} />
             <Tab id={"openings-chart"} title={"Openings Frequency"} />
             <Tab id={"players-victory-heatmap"} title={"Players Victory Rate"} />
+            <Tab id={"pieces-placement-heatmap"} title={"Pieces Placement Throught Games"} />
         </Tabs>
         <div style={{"paddingTop": "30px", "width": "100%", "height": "100%"}}>
             {activeTab === "general-information" && <GeneralInformation eloBucketStats={eloBucketStats} />}
             {activeTab === "openings-chart" && <OpeningsChart eloBucketStats={eloBucketStats} />}
             {activeTab === "players-victory-heatmap" && <PlayersVictoryHeatmap eloBucketStats={eloBucketStats} />}
+            {activeTab === "pieces-placement-heatmap" && <PiecesPositionsHeatmap eloBucketStats={eloBucketStats}/>}
         </div>
     </div>
 }

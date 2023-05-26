@@ -21,6 +21,8 @@ export const FetchEloBucketList = (): Promise <EloBucketList> => {
 
 export type GamesWonHeatmapType = {games_won: number, games_lost: number, sample_game: string[]}[][]
 
+export type PiecesPosHeatmapType = Map<{player_color: string, piece_type: string, move_no: number}, number[][]>
+
 export type MostUsedOpeningsAndFrqType = Map<string,  {nr_games: number, sample_game: string[]}>
 
 export type MostUsedTimecontrolsAndFrqType = Map<string, number>
@@ -36,6 +38,7 @@ export interface EloBucketStats {
     "most_used_openings_and_frq": MostUsedOpeningsAndFrqType
     "most_used_timecontrols_and_frq": MostUsedTimecontrolsAndFrqType
     "games_won_heatmap": GamesWonHeatmapType
+    "pieces_pos_heatmap": PiecesPosHeatmapType
 }
 
 /** Given a bucket ID (which is usually the minimal elo / 100),

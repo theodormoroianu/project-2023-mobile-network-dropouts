@@ -66,6 +66,9 @@ class ComputeGamesByAverageBucket:
             for j in range(SUBBUCHET_SIZE)
         ])
 
+        # used to create a heatmap of piece placement throught a game
+        self.piece_pos_heatmap = defaultdict(lambda: dict()) 
+
         # timecontrol_per_elo_bucket[elo_bucket] = specifc trimecontrol and its frequency
         self.timecontrol_per_elo_bucket = defaultdict(lambda: defaultdict(lambda: 0))
 
@@ -129,6 +132,45 @@ class ComputeGamesByAverageBucket:
             if self.games_won_heatmap[elo_bucket][b1][b2]["sample_game"] == []:
                 # add sample game
                 self.games_won_heatmap[elo_bucket][b1][b2]["sample_game"] = generate_game_fens(game)
+
+		# compute piece positions heatmap data
+        def process_board(board, move_no):
+            board_list = str(board).split()
+            piece_mapping = {
+                "P": ("white", "pawn"),
+                "N": ("white", "knight"),
+                "B": ("white", "bishop"),
+                "R": ("white", "rook"),
+                "Q": ("white", "queen"),
+                "K": ("white", "king"),
+                "p": ("black", "pawn"),
+                "n": ("black", "knight"),
+                "b": ("black", "bishop"),
+                "r": ("black", "rook"),
+                "q": ("black", "queen"),
+                "k": ("black", "king")
+            }
+
+            for row in range(8):
+                for col in range(8):
+                    piece = board_list[row * 8 + col]
+                    if piece != '.':
+                        player_color, piece_type = piece_mapping[piece]
+                        string_key = player_color + "|" +  piece_type + "|" + str(move_no)
+
+                        if string_key not in self.piece_pos_heatmap[elo_bucket]:
+                            self.piece_pos_heatmap[elo_bucket][string_key] = \
+                                    [[0] * 8 for _ in range(8)]
+                        self.piece_pos_heatmap[elo_bucket][string_key][row][col] += 1
+
+        board = game.board()
+        process_board(board, 0)
+
+        move_no = 1
+        for move in game.mainline_moves():
+            board.push(move)
+            process_board(board, move_no)
+            move_no += 1
 
 
     def dump_stats(self):
@@ -205,7 +247,7 @@ class ComputeGamesByAverageBucket:
             elo_stats["most_used_openings_and_frq"] = most_used_openings_per_elo_bucket[elo_bucket]
             elo_stats["most_used_timecontrols_and_frq"] = most_used_timecontrols_per_elo_bucket[elo_bucket]
             elo_stats["games_won_heatmap"] = self.games_won_heatmap[elo_bucket]
-
+            elo_stats["pieces_pos_heatmap"] = self.piece_pos_heatmap[elo_bucket]
 
 
 
