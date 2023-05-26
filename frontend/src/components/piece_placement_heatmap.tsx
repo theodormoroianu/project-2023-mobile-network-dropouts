@@ -15,19 +15,21 @@ const Heatmap = ({ eloBucketStats, pieceType, moveNo, playerColor }: HeatmapStat
     if (eloBucketStats === null || eloBucketStats === undefined)
         return <div><p>Loading...</p></div>;
    
-    let lookupKey = `${playerColor}|${pieceType}|${moveNo}`;
-    let heatmapData = eloBucketStats.pieces_pos_heatmap.get(lookupKey);
-    console.log(heatmapData)
+    const obtainHeatmapData = (playerColor: string, pieceType: string, moveNo: number) => {
+      let lookupKey = `${playerColor}|${pieceType}|${moveNo}`;
+      return eloBucketStats.pieces_pos_heatmap.get(lookupKey);
+    }
 
-    let series = eloBucketStats.games_won_heatmap.map((row, index) =>
+    let heatmapData = obtainHeatmapData(playerColor, pieceType, moveNo);
+    let mostFreqPos = Math.max(...heatmapData!.reduce((acc, row) => acc.concat(row)));
+
+    let series = heatmapData?.map((row, index) =>
         {return {
-
-            // TODO reverse rows when displaying
             name: `${8 - index}`,
-            data: row.map(item => Math.round(item.games_won / Math.max(1, item.games_won + item.games_lost) * 100) / 100)
+            data: row.map(item => item / mostFreqPos)
         }}
     );
-    series.reverse();
+    series?.reverse();
 
     let playerColorCapitalized = playerColor[0].toUpperCase() + playerColor.slice(1);
 
