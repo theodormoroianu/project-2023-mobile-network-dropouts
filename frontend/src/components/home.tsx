@@ -86,9 +86,9 @@ export const Map = memo(() => {
       {/* @ts-ignore */}
       <Tooltip>{tooltipContent}</Tooltip>
       <p style={{
+        textAlign: "center",
         position: "relative",
         top: "-25px",
-        left: "50%",
         zIndex: "1000",
         fontSize: "9px"
       }}>
