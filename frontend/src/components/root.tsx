@@ -1,12 +1,9 @@
 import { Alignment, Button, Classes, Navbar, NavbarDivider, NavbarGroup, NavbarHeading } from '@blueprintjs/core';
 import { useState } from 'react';
-import { EloGamesDistributionViz } from '../d3_visualizations/elo_games_distribution_viz';
-import { D3VizAndChessboardSplitScreen } from './viz_and_chess_wrapper';
-import { AverageGameLengthHistViz } from '../d3_visualizations/average_game_length_hist_viz';
-import SideBySideVizWrapper from './side_by_side_viz_wrapper';
-import { NrMovesPerGamePerEloBucket } from '../d3_visualizations/nr_moves_per_game_per_elo_bucket';
-import { EloBucketsViewer } from './elo_buckets_viewer';
+import { EloBucketsViewer } from './elo_buckets_viewer_tab';
 import { Home } from './home';
+import { ELO } from './ELO_tab';
+import { AverageLength } from './average_length_tab';
 
 function Root() {
     // stores the view we want to display
@@ -50,11 +47,8 @@ function Root() {
             <div style={{ "width": "100%", "height": "100%", "padding": "30px", "paddingTop": "80px" }}>
                 {/* We display the view we are interested in. */}
                 {view === "home" && <Home />}
-                {view === "elo_games_distribution" && <D3VizAndChessboardSplitScreen d3Viz={EloGamesDistributionViz} />}
-                {view === "average_game_length_his_viz" &&
-                    <SideBySideVizWrapper
-                        D3RendererMasterViz={AverageGameLengthHistViz}
-                        D3RendererSlaveViz={NrMovesPerGamePerEloBucket} />}
+                {view === "elo_games_distribution" && <ELO />}
+                {view === "average_game_length_his_viz" && <AverageLength />}
                 {view === "elo-specifics" && <EloBucketsViewer />}
             </div>
         </div>
