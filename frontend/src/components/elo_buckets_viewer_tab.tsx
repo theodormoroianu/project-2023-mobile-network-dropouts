@@ -1,4 +1,4 @@
-import { Card, Elevation, NonIdealState, Tab, Tabs, Checkbox } from '@blueprintjs/core';
+import { NonIdealState, Tab, Tabs } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import { EloBucketList, EloBucketStats, FetchEloBucketStats } from '../api/elo_bucket_stats_api';
 import { FetchEloBucketList } from '../api/elo_bucket_stats_api';
