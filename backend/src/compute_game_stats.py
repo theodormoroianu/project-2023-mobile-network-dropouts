@@ -31,6 +31,9 @@ MAXIMUM_TIMECONTROLS = 5
 # Proportion of games we compute the moves of, for heatmaps
 PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP = 0.2
 
+# Probability of tracking a player's games
+PROBABILITY_TRACK_PLAYER = 0.3
+
 def generate_game_fens(game) -> List[str]:
     fens = []
     while game is not None:
@@ -75,6 +78,9 @@ class ComputeGamesByAverageBucket:
 
         # timecontrol_per_elo_bucket[elo_bucket] = specifc trimecontrol and its frequency
         self.timecontrol_per_elo_bucket = defaultdict(lambda: defaultdict(lambda: 0))
+
+        # track games of players, store (outcome, color, oponent_raring, opening, rating_change)
+        self.player_stats = defaultdict(lambda: [])
 
     def process_new_game(self, game: pgn.Game, elo_bucket: int):
         h = game.headers
@@ -178,6 +184,31 @@ class ComputeGamesByAverageBucket:
                 move_no += 1
 
 
+        # track game stats for both players
+        for color in ["White", "Black"]:
+            player = game.headers[color]
+            if player in self.player_stats or random.random() < PROBABILITY_TRACK_PLAYER:
+                if game.headers["Result"] == "1/2-1/2":
+                    outcome = "draw"
+                else:
+                    winning_outcome = "1-0" if color == "White" else "0-1"
+                    outcome = "win" if game.headers["Result"] == winning_outcome else "loss"
+
+                elo = game.headers[f"{color}Elo"]
+                if f"{color}RatingDiff" in game.headers:
+                    elo_change = game.headers[f"{color}RatingDiff"]
+                else:
+                    elo_change = 0
+                player_name = game.headers[color]
+                opening = game.headers["Opening"]
+                oponent = "Black" if color == "White" else "White"
+                oponent_rating = game.headers[f"{oponent}Elo"]
+                utc_date = game.headers["UTCDate"] + "|" + game.headers["UTCTime"]
+
+                data_to_store = (player_name, color, outcome, opening, elo, elo_change, oponent_rating, utc_date)
+                self.player_stats[player].append(data_to_store)
+
+
     def dump_stats(self):
         # generate basic stats
         basic_stats: storage.BasicStats = storage.get_entry(storage.BasicStats, True)
@@ -254,6 +285,10 @@ class ComputeGamesByAverageBucket:
             elo_stats["games_won_heatmap"] = self.games_won_heatmap[elo_bucket]
             elo_stats["pieces_pos_heatmap"] = self.piece_pos_heatmap[elo_bucket]
 
+            # select the player with most games and display his/her stats
+            player_games = [(len(self.player_stats[player]), player) for player in self.player_stats]
+            player_to_show = max(player_games)[1]
+            elo_stats["individual_player_stats"] = self.player_stats[player_to_show]
 
 
 def compute_stats_for_chunk(chunks: list[str]):

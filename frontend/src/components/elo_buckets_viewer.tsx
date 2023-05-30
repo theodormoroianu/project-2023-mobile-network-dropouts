@@ -8,7 +8,7 @@ import { ApexOptions } from 'apexcharts';
 import { rgb } from 'd3';
 import { ChessBoardFenExplorer } from './chessboard';
 import PiecesPositionsHeatmap from './piece_placement_heatmap';
-
+import IndividualPlayerStats from './individual_player_stats';
 
 interface GeneralInformationStats{
     eloBucketStats: EloBucketStats | null
@@ -290,12 +290,14 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
             <Tab id={"openings-chart"} title={"Openings Frequency"} />
             <Tab id={"players-victory-heatmap"} title={"Players Victory Rate"} />
             <Tab id={"pieces-placement-heatmap"} title={"Pieces Placement Throught Games"} />
+            <Tab id={"specific-player-stats"} title={"Player stats of a specific player"} />
         </Tabs>
         <div style={{"paddingTop": "30px", "width": "100%", "height": "100%"}}>
             {activeTab === "general-information" && <GeneralInformation eloBucketStats={eloBucketStats} />}
             {activeTab === "openings-chart" && <OpeningsChart eloBucketStats={eloBucketStats} />}
             {activeTab === "players-victory-heatmap" && <PlayersVictoryHeatmap eloBucketStats={eloBucketStats} />}
             {activeTab === "pieces-placement-heatmap" && <PiecesPositionsHeatmap eloBucketStats={eloBucketStats}/>}
+            {activeTab === "specific-player-stats" && <IndividualPlayerStats eloBucketStats={eloBucketStats}/>}
         </div>
     </div>
 }
