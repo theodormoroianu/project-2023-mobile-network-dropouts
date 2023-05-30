@@ -116,7 +116,7 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
             {/* @ts-ignore */}
             <ReactApexChart
               options={options}
-              series={series}
+              series={series as any}
               type="radialBar"
               height={350}
               width={350}
