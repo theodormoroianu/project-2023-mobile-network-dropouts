@@ -26,39 +26,39 @@ function SideBySideVizWrapper<T>({
       }}
     >
       <div style={{ width: "50%" }}>
-        <Card
+        {/* <Card
           interactive={true}
           elevation={Elevation.TWO}
           style={{ height: "100%" }}
-        >
-          <D3Wrapper
-            D3Renderer={(selector) => D3RendererMasterViz(selector, setData)}
-          />
-        </Card>
+        > */}
+        <D3Wrapper
+          D3Renderer={(selector) => D3RendererMasterViz(selector, setData)}
+        />
+        {/* </Card> */}
       </div>
       <div style={{ width: "5%" }}></div>
       <div style={{ width: "45%" }}>
-        <Card
+        {/* <Card
           interactive={false}
           elevation={Elevation.TWO}
           style={{ height: "100%" }}
-        >
-          {data !== null && (
-            <D3Wrapper
-              D3Renderer={(selector) => D3RendererSlaveViz(selector, data as T)}
-              redrawOnChange={true}
-            />
-          )}
-          {data === null && (
-            <NonIdealState
-              icon={"search"}
-              title={"Please select an ELO range."}
-              description={
-                "To view a histogram of the number of moves per game in an ELO range, please click on the apropriate entry."
-              }
-            />
-          )}
-        </Card>
+        > */}
+        {data !== null && (
+          <D3Wrapper
+            D3Renderer={(selector) => D3RendererSlaveViz(selector, data as T)}
+            redrawOnChange={true}
+          />
+        )}
+        {data === null && (
+          <NonIdealState
+            icon={"search"}
+            title={"Please select an ELO range."}
+            description={
+              "To view a histogram of the number of moves per game in an ELO range, please click on the apropriate entry."
+            }
+          />
+        )}
+        {/* </Card> */}
       </div>
     </div>
   );

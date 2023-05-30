@@ -9,7 +9,7 @@ import {
 } from "@blueprintjs/core";
 import { useState } from "react";
 import { EloBucketsViewer } from "./elo_buckets_viewer_tab";
-import { Home } from "./home";
+import { Home } from "./home_tab";
 import { ELO } from "./ELO_tab";
 import { AverageLength } from "./average_length_tab";
 
