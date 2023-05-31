@@ -80,7 +80,7 @@ class ComputeGamesByAverageBucket:
         self.timecontrol_per_elo_bucket = defaultdict(lambda: defaultdict(lambda: 0))
 
         # track games of players, store (outcome, color, oponent_raring, opening, rating_change)
-        self.player_stats = defaultdict(lambda: [])
+        self.player_stats = defaultdict(lambda: dict())
 
     def process_new_game(self, game: pgn.Game, elo_bucket: int):
         h = game.headers
@@ -187,7 +187,7 @@ class ComputeGamesByAverageBucket:
         # track game stats for both players
         for color in ["White", "Black"]:
             player = game.headers[color]
-            if player in self.player_stats or random.random() < PROBABILITY_TRACK_PLAYER:
+            if player in self.player_stats[elo_bucket] or random.random() < PROBABILITY_TRACK_PLAYER:
                 if game.headers["Result"] == "1/2-1/2":
                     outcome = "draw"
                 else:
@@ -206,7 +206,9 @@ class ComputeGamesByAverageBucket:
                 utc_date = game.headers["UTCDate"] + "|" + game.headers["UTCTime"]
 
                 data_to_store = (player_name, color, outcome, opening, elo, elo_change, oponent_rating, utc_date)
-                self.player_stats[player].append(data_to_store)
+                if player not in self.player_stats[elo_bucket]:
+                    self.player_stats[elo_bucket][player] = []
+                self.player_stats[elo_bucket][player].append(data_to_store)
 
 
     def dump_stats(self):
@@ -286,9 +288,9 @@ class ComputeGamesByAverageBucket:
             elo_stats["pieces_pos_heatmap"] = self.piece_pos_heatmap[elo_bucket]
 
             # select the player with most games and display his/her stats
-            player_games = [(len(self.player_stats[player]), player) for player in self.player_stats]
+            player_games = [(len(self.player_stats[elo_bucket][player]), player) for player in self.player_stats[elo_bucket]]
             player_to_show = max(player_games)[1]
-            elo_stats["individual_player_stats"] = self.player_stats[player_to_show]
+            elo_stats["individual_player_stats"] = self.player_stats[elo_bucket][player_to_show]
 
 
 def compute_stats_for_chunk(chunks: list[str]):
