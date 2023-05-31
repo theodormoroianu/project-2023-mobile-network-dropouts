@@ -27,7 +27,7 @@ export type MostUsedOpeningsAndFrqType = Map<string,  {nr_games: number, sample_
 
 export type MostUsedTimecontrolsAndFrqType = Map<string, number>
 
-export type PlayerStatsType = {player_name: string, color: string, outcome: string, opening: string, elo: number, elo_change: number, oponent_rating: number, utc_date: string}[]
+export type PlayerStatsType = [string, string, string, string, number, number, number, string][]
 
 export interface EloBucketStats {
     "elo_min": number 
@@ -41,7 +41,7 @@ export interface EloBucketStats {
     "most_used_timecontrols_and_frq": MostUsedTimecontrolsAndFrqType
     "games_won_heatmap": GamesWonHeatmapType
     "pieces_pos_heatmap": PiecesPosHeatmapType
-    "player_stats": PlayerStatsType
+    "individual_player_stats": PlayerStatsType
 }
 
 /** Given a bucket ID (which is usually the minimal elo / 100),

@@ -7,15 +7,23 @@ import { ApexOptions } from 'apexcharts';
 import { rgb } from 'd3';
 import { CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from 'recharts';
 
-const RatingScatter = () => {
-		const data01 = [
-      { x: "22-10-2020", y: 30 },
-      { x: "23-10-2020", y: 200 },
-      { x: "24-10-2020", y: 100 },
-      { x: "25-10-2020", y: 400 },
-      { x: "26-10-2020", y: 150 },
-      { x: "27-10-2020", y: 250 },
-    ];
+const RatingScatter = ({ eloBucketStats }: IndividualPlayerStatsProps) => {
+    let ratingMap = new Map<Date, number>();
+    const stats = eloBucketStats!.individual_player_stats;
+    for (let i = 0; i < stats.length; i++) {
+      let utc_day_string = stats[i][7].split('|')[0].split('.');
+      let utc_day = new Date(Number(utc_day_string[0]), Number(utc_day_string[1]) - 1, Number(utc_day_string[2]));
+      let rating = Number(stats[i][4]);
+      if (ratingMap.has(utc_day))
+        ratingMap.set(utc_day, Math.max(ratingMap.get(utc_day)!, rating));
+      else
+        ratingMap.set(utc_day, rating);
+    }
+
+    let data: any[] = [];
+    ratingMap.forEach((rating, date) => {
+      data.push({ 'x': date.toLocaleDateString("en-UK"), 'y': rating });
+    });
 
     return (
       <ResponsiveContainer width="100%" height={400}>
@@ -33,7 +41,7 @@ const RatingScatter = () => {
           <ZAxis type="number" range={[100]} />
           <Tooltip cursor={{ strokeDasharray: '3 3' }} />
           <Legend />
-          <Scatter name="Rating Change" data={data01} fill="#8884d8" line shape="cross" />
+          <Scatter name="Rating Change" data={data} fill="#8884d8" line  />
         </ScatterChart>
       </ResponsiveContainer>
     )
@@ -77,10 +85,36 @@ const WinRate = ({ noWins, noLoses, noDraws, color }: WinRateProps) => {
 }
 
 const PlayerStats = ({ eloBucketStats }: IndividualPlayerStatsProps) => {
-  const noWins = 50;
-  const noLoses = 50;
-  const noDraws = 50;
-          
+    const stats = eloBucketStats!.individual_player_stats;
+    let noWitheWins = 0, noWitheLoses = 0, noWitheDraws = 0;
+    let noBlackWins = 0, noBlackLoses = 0, noBlackDraws = 0;
+
+    console.log(stats[0])
+
+    for (let i = 0; i < stats.length; i++) {
+        let color = stats[i][1];
+        let outcome = stats[i][2];
+
+        if (outcome === "win") {
+            if (color === "White")
+              noWitheWins++;
+            else
+              noBlackWins++;
+        }
+        else if (outcome === "loss") {
+            if (color === "White")
+              noWitheLoses++;
+            else
+              noBlackLoses++;
+        }
+        else if (outcome === "draw") {
+            if (color === "White")
+              noWitheDraws++;
+            else
+              noBlackDraws++;
+        }
+    }
+
     return <div style={{
         "display": "flex",
         "height": "100%",
@@ -89,9 +123,9 @@ const PlayerStats = ({ eloBucketStats }: IndividualPlayerStatsProps) => {
         "justifyContent": "space-evenly",
         "paddingLeft": "150px"
     }}>
-       <WinRate noWins={noWins} noLoses={noLoses} noDraws={noDraws} color="all"/>
-       <WinRate noWins={noWins} noLoses={noLoses} noDraws={noDraws} color="White"/>
-       <WinRate noWins={noWins} noLoses={noLoses} noDraws={noDraws} color="Black"/>
+       <WinRate noWins={noWitheWins + noBlackWins} noLoses={noWitheLoses + noBlackLoses} noDraws={noWitheDraws + noBlackDraws} color="all"/>
+       <WinRate noWins={noWitheWins} noLoses={noWitheLoses} noDraws={noWitheDraws} color="White"/>
+       <WinRate noWins={noBlackWins} noLoses={noBlackLoses} noDraws={noBlackDraws} color="Black"/>
     </div>
 }
 
@@ -102,14 +136,25 @@ const IndividualPlayerStats = ({ eloBucketStats }: IndividualPlayerStatsProps) =
     if (eloBucketStats === null || eloBucketStats === undefined)
         return <div><p>Loading...</p></div>;
    
+    const stats = eloBucketStats.individual_player_stats;
+    const playerName = stats[0][0];
+    
+    let averageOponentRating = 0;
+    for (let i = 0; i < stats.length; i++)
+        averageOponentRating += Number(stats[i][6]);
+    averageOponentRating = Math.round(averageOponentRating / stats.length);
+
     return <div>
         <div style={{
             "width": "90%",
             "height": "100%",
             "paddingTop": "0",
+            "display": "flex",
+            "justifyContent": "space-evenly",
         }}>
-            <h2>Player name: Magnus</h2>
-            <h2>Average oponent rating: 1250</h2>
+            <h2>Player username: {playerName}</h2>
+            <h2>Average oponent rating: {averageOponentRating}</h2>
+            <h2>Total number of games: {stats.length}</h2>
         </div>
         <div style={{
             "width": "90%",
@@ -121,7 +166,7 @@ const IndividualPlayerStats = ({ eloBucketStats }: IndividualPlayerStatsProps) =
             "width": "90%",
             "height": "100%",
         }}>
-            <RatingScatter/>
+            <RatingScatter eloBucketStats={eloBucketStats}/>
         </div>
     </div>;
 }
