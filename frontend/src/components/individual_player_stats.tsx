@@ -99,6 +99,7 @@ const WinRate = ({ noWins, noLoses, noDraws, color }: WinRateProps) => {
       {color !== "all" && <h4>Games with {color}</h4>}
       {/* @ts-ignore */}
       <ReactApexChart
+      /* @ts-ignore */
         options={options}
         series={series}
         type="pie"
