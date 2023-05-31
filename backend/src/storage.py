@@ -85,5 +85,7 @@ class PerEloStats:
     # }
     # pieces_pos_heatmap: {(player_color, piece_type, move_number): [[int]]}
     #       used to display a heatmap of the positions of each piece through a game in a speciffic ELO bucket
+    # individual_player_stats: (player_name, color, outcome, opening, elo, elo_change, oponent_rating, utc_date)
+    #       showcase stats for an individual player
     def __init__(self):
         self.per_elo_stats = dict()
