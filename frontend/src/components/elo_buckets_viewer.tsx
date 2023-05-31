@@ -290,7 +290,7 @@ const EloBucketViewer = ({ eloBucket } : EloBucketViewerProps) => {
             <Tab id={"openings-chart"} title={"Openings Frequency"} />
             <Tab id={"players-victory-heatmap"} title={"Players Victory Rate"} />
             <Tab id={"pieces-placement-heatmap"} title={"Pieces Placement Throught Games"} />
-            <Tab id={"specific-player-stats"} title={"Player stats of a specific player"} />
+            <Tab id={"specific-player-stats"} title={"Player stats of a representative player"} />
         </Tabs>
         <div style={{"paddingTop": "30px", "width": "100%", "height": "100%"}}>
             {activeTab === "general-information" && <GeneralInformation eloBucketStats={eloBucketStats} />}
