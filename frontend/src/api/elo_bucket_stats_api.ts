@@ -39,21 +39,30 @@ export type MostUsedOpeningsAndFrqType = Map<
 
 export type MostUsedTimecontrolsAndFrqType = Map<string, number>;
 
-export type PlayerStatsType = [string, string, string, string, number, number, number, string][]
+export type PlayerStatsType = [
+  string,
+  string,
+  string,
+  string,
+  number,
+  number,
+  number,
+  string
+][];
 
 export interface EloBucketStats {
-    "elo_min": number 
-    "elo_max": number
-    "total_nr_games_in_elo_bucket": number
-    "nr_games": number
-    "sample_game": string[],
-    "average_length": number
-    "frq_games_by_nr_moves": number[], 
-    "most_used_openings_and_frq": MostUsedOpeningsAndFrqType
-    "most_used_timecontrols_and_frq": MostUsedTimecontrolsAndFrqType
-    "games_won_heatmap": GamesWonHeatmapType
-    "pieces_pos_heatmap": PiecesPosHeatmapType
-    "individual_player_stats": PlayerStatsType
+  elo_min: number;
+  elo_max: number;
+  total_nr_games_in_elo_bucket: number;
+  nr_games: number;
+  sample_game: string[];
+  average_length: number;
+  frq_games_by_nr_moves: number[];
+  most_used_openings_and_frq: MostUsedOpeningsAndFrqType;
+  most_used_timecontrols_and_frq: MostUsedTimecontrolsAndFrqType;
+  games_won_heatmap: GamesWonHeatmapType;
+  pieces_pos_heatmap: PiecesPosHeatmapType;
+  individual_player_stats: PlayerStatsType;
 }
 
 /** Given a bucket ID (which is usually the minimal elo / 100),
