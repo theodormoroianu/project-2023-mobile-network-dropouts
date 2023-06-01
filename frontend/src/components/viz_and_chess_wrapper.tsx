@@ -40,7 +40,8 @@ export const ComponentAndChessboardSplitScreen = ({
 interface D3VizAndChessboardSplitScreenProps {
   d3Viz: (
     selector: string,
-    setFens: (fens: Promise<[string[], number]>) => void
+    setFens: (fens: Promise<[string[], number]>) => void,
+    setChessboardTitle: (chessboardTitle: string) => void
   ) => void;
   redrawOnChange?: boolean;
 }
@@ -53,6 +54,8 @@ export const D3VizAndChessboardSplitScreen = ({
   const [fensToDisplay, setFensToDisplay] = useState<
     Promise<[string[], number]>
   >(new Promise(() => [[], 0]));
+  const [chessboardTitle, setChessboardTitle] = useState("");
+
   // true if the chessboard is displaying some fens.
   // false otherwise.
 
@@ -66,24 +69,22 @@ export const D3VizAndChessboardSplitScreen = ({
       }}
     >
       <div style={{ width: "60%" }}>
-        {/* <Card interactive={true} elevation={Elevation.TWO} style={{"height": "100%"}}>  */}
         <D3Wrapper
-          D3Renderer={(selector) => d3Viz(selector, setFensToDisplay)}
+          D3Renderer={(selector) =>
+            d3Viz(selector, setFensToDisplay, setChessboardTitle)
+          }
           redrawOnChange={redrawOnChange}
         />
-        {/* </Card> */}
       </div>
       <div style={{ width: "5%" }}></div>
-      <div style={{ width: "35%" }}>
-        {/* <Card interactive={false} elevation={Elevation.TWO} style={{"height": "100%"}}> */}
+      <div style={{ width: "35%", position: "relative", top: "-70px" }}>
         <ChessBoardFenExplorer
           fensToDisplay={fensToDisplay}
           showNonIdealStateIfEmpty={true}
           my_title="Please select an ELO range."
           my_description="To view the chessboard, please click on the apropriate ELO range entry."
-          chessboard_title="ELO Range {}"
+          chessboard_title={chessboardTitle}
         />
-        {/* </Card> */}
       </div>
     </div>
   );
