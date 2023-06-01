@@ -135,7 +135,7 @@ const Heatmap = ({
     title: {
       text: `${playerColorCapitalized} ${pieceType} placement at move ${moveNo}`,
       align: "center",
-      offsetY: 20
+      offsetY: 20,
     },
   };
   return (
@@ -157,7 +157,7 @@ interface PiecesRadioProps {
 const PiecesRadio = ({ pieceType, setPieceType }: PiecesRadioProps) => {
   return (
     <>
-        <h4 style={{textAlign: "center"}}>Select Piece Type</h4>
+      <h4 style={{ textAlign: "center" }}>Select Piece Type</h4>
       <RadioGroup
         onChange={(event) => setPieceType(event.currentTarget.value)}
         selectedValue={pieceType}
@@ -181,7 +181,7 @@ interface MoveNoSliderProps {
 const MoveNoSlider = ({ moveNo, setMoveNo }: MoveNoSliderProps) => {
   return (
     <>
-      <h4 style={{textAlign: "center"}}>Select Move Number</h4>
+      <h4 style={{ textAlign: "center" }}>Select Move Number</h4>
       <Slider
         min={0}
         max={100}
@@ -219,15 +219,14 @@ const PiecesPositionsHeatmap = ({
           width: "100%",
         }}
       >
-        <div style={{height: "15%", 
-            alignSelf: "center"}}>
-        <PiecesRadio pieceType={pieceType} setPieceType={setPieceType} />
+        <div style={{ height: "15%", alignSelf: "center" }}>
+          <PiecesRadio pieceType={pieceType} setPieceType={setPieceType} />
         </div>
         <div
           style={{
             width: "90%",
             height: "90%",
-            alignSelf: "center"
+            alignSelf: "center",
           }}
         >
           <Heatmap
@@ -247,15 +246,14 @@ const PiecesPositionsHeatmap = ({
           height: "100%",
         }}
       >
-      <div style={{height: "15%", 
-            width: "80%",
-            alignSelf: "center"}}>
-        <MoveNoSlider moveNo={moveNo} setMoveNo={setMoveNo} /></div>
+        <div style={{ height: "15%", width: "80%", alignSelf: "center" }}>
+          <MoveNoSlider moveNo={moveNo} setMoveNo={setMoveNo} />
+        </div>
         <div
           style={{
             width: "90%",
             height: "90%",
-            alignSelf: "center"
+            alignSelf: "center",
           }}
         >
           <Heatmap
