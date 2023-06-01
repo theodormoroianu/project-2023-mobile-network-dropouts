@@ -49,6 +49,21 @@ const Heatmap = ({
   let playerColorCapitalized =
     playerColor[0].toUpperCase() + playerColor.slice(1);
 
+  let R = 0,
+    G = 0,
+    B = 0;
+  if (playerColorCapitalized === "Black") {
+    R = 255;
+    G = 0;
+    B = 0;
+  }
+
+  if (playerColorCapitalized === "White") {
+    R = 0;
+    G = 0;
+    B = 255;
+  }
+
   let options: ApexOptions = {
     plotOptions: {
       heatmap: {
@@ -61,7 +76,10 @@ const Heatmap = ({
                 from: 0.4 + id / 500,
                 to: 0.4 + (id + 1) / 500,
                 name: `range-${id}`,
-                color: rgb(255 - 2.55 * id, 255 - 2.55 * id, 255).formatHex(),
+                color:
+                  playerColorCapitalized === "Black"
+                    ? rgb(R, 255 - 2.55 * id, 255 - 2.55 * id).formatHex()
+                    : rgb(255 - 2.55 * id, 255 - 2.55 * id, B).formatHex(),
               };
             })
             .concat([
@@ -75,7 +93,7 @@ const Heatmap = ({
                 from: 0.6,
                 to: 1,
                 name: `range-1`,
-                color: rgb(0, 0, 255).formatHex(),
+                color: rgb(R, G, B).formatHex(),
               },
             ]),
         },
@@ -117,19 +135,18 @@ const Heatmap = ({
     title: {
       text: `${playerColorCapitalized} ${pieceType} placement at move ${moveNo}`,
       align: "center",
+      offsetY: 20,
     },
   };
   return (
-    <div style={{ width: "60%" }}>
-      {/* @ts-ignore */}
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="heatmap"
-        height={600}
-        width={700}
-      />
-    </div>
+    /* @ts-ignore */
+    <ReactApexChart
+      options={options}
+      series={series}
+      type="heatmap"
+      height={"100%"}
+      width={"100%"}
+    />
   );
 };
 
@@ -139,20 +156,8 @@ interface PiecesRadioProps {
 }
 const PiecesRadio = ({ pieceType, setPieceType }: PiecesRadioProps) => {
   return (
-    <div
-      style={{
-        width: 600,
-        paddingLeft: 30,
-      }}
-    >
-      <div
-        style={{
-          paddingTop: 0,
-          paddingLeft: 190,
-        }}
-      >
-        <h4>Select Piece Type</h4>
-      </div>
+    <>
+      <h4 style={{ textAlign: "center" }}>Select Piece Type</h4>
       <RadioGroup
         onChange={(event) => setPieceType(event.currentTarget.value)}
         selectedValue={pieceType}
@@ -165,7 +170,7 @@ const PiecesRadio = ({ pieceType, setPieceType }: PiecesRadioProps) => {
         <Radio label="Queen" value="queen" />
         <Radio label="King" value="king" />
       </RadioGroup>
-    </div>
+    </>
   );
 };
 
@@ -175,19 +180,8 @@ interface MoveNoSliderProps {
 }
 const MoveNoSlider = ({ moveNo, setMoveNo }: MoveNoSliderProps) => {
   return (
-    <div
-      style={{
-        width: 600,
-      }}
-    >
-      <div
-        style={{
-          paddingTop: 0,
-          paddingLeft: 230,
-        }}
-      >
-        <h4>Select Move Number</h4>
-      </div>
+    <>
+      <h4 style={{ textAlign: "center" }}>Select Move Number</h4>
       <Slider
         min={0}
         max={100}
@@ -196,7 +190,7 @@ const MoveNoSlider = ({ moveNo, setMoveNo }: MoveNoSliderProps) => {
         value={moveNo}
         onChange={(newMoveNo) => setMoveNo(newMoveNo)}
       />
-    </div>
+    </>
   );
 };
 
@@ -210,46 +204,67 @@ const PiecesPositionsHeatmap = ({
   const [moveNo, setMoveNo] = useState(0);
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "88%",
-          margin: "2%",
+          flexDirection: "column",
+          width: "100%",
         }}
       >
-        <Card interactive={true} elevation={Elevation.TWO}>
+        <div style={{ height: "15%", alignSelf: "center" }}>
           <PiecesRadio pieceType={pieceType} setPieceType={setPieceType} />
-        </Card>
-        <Card interactive={true} elevation={Elevation.TWO}>
-          <MoveNoSlider moveNo={moveNo} setMoveNo={setMoveNo} />
-        </Card>
+        </div>
+        <div
+          style={{
+            width: "90%",
+            height: "90%",
+            alignSelf: "center",
+          }}
+        >
+          <Heatmap
+            eloBucketStats={eloBucketStats}
+            pieceType={pieceType}
+            moveNo={moveNo}
+            playerColor={"white"}
+          />
+        </div>
       </div>
 
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           width: "100%",
           height: "100%",
         }}
       >
-        <Heatmap
-          eloBucketStats={eloBucketStats}
-          pieceType={pieceType}
-          moveNo={moveNo}
-          playerColor={"white"}
-        />
-        <Heatmap
-          eloBucketStats={eloBucketStats}
-          pieceType={pieceType}
-          moveNo={moveNo}
-          playerColor={"black"}
-        />
+        <div style={{ height: "15%", width: "80%", alignSelf: "center" }}>
+          <MoveNoSlider moveNo={moveNo} setMoveNo={setMoveNo} />
+        </div>
+        <div
+          style={{
+            width: "90%",
+            height: "90%",
+            alignSelf: "center",
+          }}
+        >
+          <Heatmap
+            eloBucketStats={eloBucketStats}
+            pieceType={pieceType}
+            moveNo={moveNo}
+            playerColor={"black"}
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

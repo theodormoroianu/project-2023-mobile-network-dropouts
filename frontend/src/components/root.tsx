@@ -32,22 +32,22 @@ function Root() {
           />
           <Button
             className={Classes.MINIMAL}
-            icon="model"
-            text="ELO"
-            onClick={() => setView("elo_games_distribution")}
-            active={view === "elo_games_distribution"}
-          />
-          <Button
-            className={Classes.MINIMAL}
             icon="comparison"
-            text="Average Length"
+            text="History of Chess"
             onClick={() => setView("average_game_length_his_viz")}
             active={view === "average_game_length_his_viz"}
           />
           <Button
             className={Classes.MINIMAL}
+            icon="model"
+            text="ELO Rating"
+            onClick={() => setView("elo_games_distribution")}
+            active={view === "elo_games_distribution"}
+          />
+          <Button
+            className={Classes.MINIMAL}
             icon="filter"
-            text="ELO Specifics"
+            text="Advanced Analysis"
             onClick={() => setView("elo-specifics")}
             active={view === "elo-specifics"}
           />
