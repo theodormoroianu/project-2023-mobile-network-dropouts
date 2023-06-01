@@ -293,8 +293,7 @@ const PlayersVictoryHeatmap = ({
           width={700}
         />
       </div>
-      {/* <div style={{"width": "5%"}}></div> */}
-      <div style={{ width: "35%", paddingTop: "-50px" }}>
+      <div style={{ width: "35%", position: "relative", top: "-50px" }}>
         <ChessBoardFenExplorer
           fensToDisplay={fensToDisplay}
           showNonIdealStateIfEmpty={true}

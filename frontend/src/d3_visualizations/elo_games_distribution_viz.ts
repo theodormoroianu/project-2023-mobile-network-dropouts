@@ -9,7 +9,8 @@ import { BasicEloGameStat, FetchBasicEloGameStats } from "../api/stats_api";
 /** Displays a histogram of the numbers of games for each ELO level */
 export const EloGamesDistributionViz = (
   selector: string,
-  setFens: (fens: Promise<[string[], number]>) => void
+  setFens: (fens: Promise<[string[], number]>) => void,
+  setChessboardTitle: (chessboardTitle: string) => void
 ) => {
   FetchBasicEloGameStats()
     .then((data) => {
@@ -87,6 +88,7 @@ export const EloGamesDistributionViz = (
         .on("click", (event: any, obj: BasicEloGameStat) => {
           console.log("Clicked!", obj);
           setFens(Promise.resolve([obj.sample_game, 0]));
+          setChessboardTitle(`Sample game for ${obj.elo_min} - ${obj.elo_max}`);
         })
         .on(
           "mouseover",
