@@ -100,11 +100,17 @@ interface ChessBoardFenExplorerProps {
   // The function returns the list of fens, and the index of the first fen to display.
   fensToDisplay: Promise<[string[], number]>;
   showNonIdealStateIfEmpty?: boolean;
+  my_title?: string;
+  my_description?: string;
+  chessboard_title?: string;
 }
 
 /** Allows the user to navigate a game, by going forward / backward in moves */
 export const ChessBoardFenExplorer = ({
   fensToDisplay,
+  my_title,
+  my_description,
+  chessboard_title,
 }: ChessBoardFenExplorerProps) => {
   let [fenCallback, setFenCallback] = useState<(fen: string) => void>(
     () => (value: string) => {
@@ -137,6 +143,7 @@ export const ChessBoardFenExplorer = ({
     >
       {fensExist && (
         <>
+          <h2 style={{ textAlign: "center" }}> {chessboard_title} </h2>
           <ChessBoardView
             setBoardStateCallback={(x) => setFenCallback(() => x)}
           />
@@ -149,10 +156,8 @@ export const ChessBoardFenExplorer = ({
       {!fensExist && (
         <NonIdealState
           icon={"search"}
-          title={"Please select an ELO range."}
-          description={
-            "To view the chessboard, please click on the apropriate ELO range entry."
-          }
+          title={my_title}
+          description={my_description}
         />
       )}
     </div>

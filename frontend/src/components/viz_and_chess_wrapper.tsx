@@ -79,6 +79,9 @@ export const D3VizAndChessboardSplitScreen = ({
         <ChessBoardFenExplorer
           fensToDisplay={fensToDisplay}
           showNonIdealStateIfEmpty={true}
+          my_title="Please select an ELO range."
+          my_description="To view the chessboard, please click on the apropriate ELO range entry."
+          chessboard_title="ELO Range {}"
         />
         {/* </Card> */}
       </div>

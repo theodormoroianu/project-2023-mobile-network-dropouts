@@ -201,7 +201,7 @@ export const Home = () => {
         style={{
           paddingLeft: "20%",
           paddingRight: "20%",
-          marginBottom: "300px",
+          paddingBottom: "300px",
         }}
       >
         <Content />

@@ -152,6 +152,8 @@ const PlayersVictoryHeatmap = ({
     Promise<[string[], number]>
   >(new Promise(() => [[], 0]));
 
+  const [gameMsg, setGameMsg] = useState("Demo game");
+
   if (eloBucketStats === null || eloBucketStats === undefined)
     return (
       <div>
@@ -229,6 +231,11 @@ const PlayersVictoryHeatmap = ({
                 0,
               ])
             );
+            let y_axis = eloBucketStats.elo_min + (9 - row) * 10;
+            let x_axis = eloBucketStats.elo_min + column * 10;
+            let range_0 = y_axis.toString() + "-" + (y_axis + 9).toString();
+            let range_1 = x_axis.toString() + "-" + (x_axis + 9).toString();
+            setGameMsg(range_0 + " vs " + range_1);
           }
         },
       },
@@ -291,6 +298,9 @@ const PlayersVictoryHeatmap = ({
         <ChessBoardFenExplorer
           fensToDisplay={fensToDisplay}
           showNonIdealStateIfEmpty={true}
+          my_title="Please select a Square."
+          my_description="To view the chessboard, please click on the Square entry from the Heatmap."
+          chessboard_title={gameMsg}
         />
       </div>
     </div>
@@ -318,6 +328,8 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
     });
   });
 
+  const [selectedOpening, setSelectedOpening] = useState(0);
+
   // let [index, setIndex] = useState(0);
   // let pie_chart_data = data.map(d => ({ name: d.name, value: d.value }));
   return (
@@ -334,9 +346,15 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
         style={{
           width: "60%",
           height: "100%",
+          alignSelf: "flex-start",
         }}
       >
-        <PieCharViewer data={data} setFensToDisplay={setFensToDisplay} />
+        <PieCharViewer
+          data={data}
+          setFensToDisplay={setFensToDisplay}
+          selectedOpening={selectedOpening}
+          setSelectedOpening={setSelectedOpening}
+        />
       </div>
       <div
         style={{
@@ -347,6 +365,9 @@ const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
         <ChessBoardFenExplorer
           fensToDisplay={fensToDisplay}
           showNonIdealStateIfEmpty={true}
+          my_title="Please select an Opening."
+          my_description="To view the chessboard, please click on the apropriate Opening entry from the Pie Chart."
+          chessboard_title={data[selectedOpening].name}
         />
       </div>
     </div>
@@ -424,7 +445,7 @@ export const EloBucketsViewer = () => {
   if (eloBuckets === null) return <p>Not loaded!</p>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
+    <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
       <Tabs
         vertical={true}
         onChange={(newTab) => setEloBucket(newTab.toString())}
@@ -438,7 +459,7 @@ export const EloBucketsViewer = () => {
           />
         ))}
       </Tabs>
-      <div style={{ paddingLeft: "30px", width: "100%" }}>
+      <div style={{ paddingLeft: "30px", width: "100%", height: "100%" }}>
         {eloBucket === "" && (
           <NonIdealState
             icon={"search"}

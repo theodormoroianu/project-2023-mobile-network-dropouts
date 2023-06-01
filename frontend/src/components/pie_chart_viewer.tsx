@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
+import { Dispatch, SetStateAction, useState } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
 
 /** Function required to make pie charts work. */
@@ -98,12 +99,16 @@ const renderActiveShape = (props: any) => {
 interface PieChartViewerProps {
   data: { name: string; value: number; sample_game: string[] }[];
   setFensToDisplay: (fens: Promise<[string[], number]>) => void;
+  selectedOpening: number;
+  setSelectedOpening: Dispatch<SetStateAction<number>>;
 }
 
 /** Renders a Pie Chart */
 export const PieCharViewer = ({
   data,
   setFensToDisplay,
+  selectedOpening,
+  setSelectedOpening,
 }: PieChartViewerProps) => {
   const COLORS = [
     "#0088FE",
@@ -139,6 +144,7 @@ export const PieCharViewer = ({
           onMouseEnter={(_, index) => setIndex(index)}
           onClick={(a, index) => {
             setFensToDisplay(Promise.resolve([a.sample_game, 0]));
+            setSelectedOpening(index);
           }}
           onMouseOver={(_, index) => setIndex(index)}
         >
