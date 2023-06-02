@@ -82,6 +82,9 @@ class ComputeGamesByAverageBucket:
         # track games of players, store (outcome, color, oponent_raring, opening, rating_change)
         self.player_stats = defaultdict(lambda: dict())
 
+        # player list per elo bucket
+        self.list_of_players_per_elo_bucket = defaultdict(lambda: set())
+
     def process_new_game(self, game: pgn.Game, elo_bucket: int):
         h = game.headers
         result = h["Result"]
@@ -210,6 +213,11 @@ class ComputeGamesByAverageBucket:
                     self.player_stats[elo_bucket][player] = []
                 self.player_stats[elo_bucket][player].append(data_to_store)
 
+        # add new player found
+        if game.headers["White"] not in self.list_of_players_per_elo_bucket[elo_bucket]:
+            self.list_of_players_per_elo_bucket[elo_bucket].add(game.headers["White"])
+        if game.headers["Black"] not in self.list_of_players_per_elo_bucket[elo_bucket]:
+            self.list_of_players_per_elo_bucket[elo_bucket].add(game.headers["Black"])
 
     def dump_stats(self):
         # generate basic stats
@@ -286,6 +294,7 @@ class ComputeGamesByAverageBucket:
             elo_stats["most_used_timecontrols_and_frq"] = most_used_timecontrols_per_elo_bucket[elo_bucket]
             elo_stats["games_won_heatmap"] = self.games_won_heatmap[elo_bucket]
             elo_stats["pieces_pos_heatmap"] = self.piece_pos_heatmap[elo_bucket]
+            elo_stats["nr_of_players"] = len(self.list_of_players_per_elo_bucket[elo_bucket])
 
             # select the player with most games and display his/her stats
             player_games = [(len(self.player_stats[elo_bucket][player]), player) for player in self.player_stats[elo_bucket]]
@@ -307,7 +316,7 @@ def compute_stats_for_chunk(chunks: list[str]):
     db = open(active_chunk, "r")
 
     print(f"Parsing chunk {active_chunk}...")
-    for _ in tqdm(range(4 * generate_data.GAMES_PER_CHUNK)):
+    for _ in tqdm(range(generate_data.GAMES_PER_CHUNK // 3)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:

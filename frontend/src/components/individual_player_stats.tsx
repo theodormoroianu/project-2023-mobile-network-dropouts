@@ -42,7 +42,7 @@ const RatingScatter = ({ eloBucketStats }: IndividualPlayerStatsProps) => {
   });
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={300}>
       <ScatterChart
         margin={{
           top: 20,
@@ -194,6 +194,7 @@ const IndividualPlayerStats = ({
     <div>
       <div
         style={{
+          marginTop: "-35px",
           width: "90%",
           height: "100%",
           paddingTop: "0",
@@ -207,6 +208,7 @@ const IndividualPlayerStats = ({
       </div>
       <div
         style={{
+          marginTop: "0px",
           width: "90%",
           height: "100%",
         }}
