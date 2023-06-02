@@ -4,6 +4,7 @@ Name is really bad. Should change it.
 This module tries to replicate what "stats.py" did.
 """
 
+import os
 import random
 from typing import List
 import chess.pgn as pgn
@@ -29,10 +30,10 @@ MAXIMUM_OPENINGS_CAPPED = 30
 MAXIMUM_TIMECONTROLS = 5
 
 # Proportion of games we compute the moves of, for heatmaps
-PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP = 0.2
+PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP = 0.1
 
 # Probability of tracking a player's games
-PROBABILITY_TRACK_PLAYER = 0.3
+PROBABILITY_TRACK_PLAYER = 0.1
 
 def generate_game_fens(game) -> List[str]:
     fens = []
@@ -316,7 +317,11 @@ def compute_stats_for_chunk(chunks: list[str]):
     db = open(active_chunk, "r")
 
     print(f"Parsing chunk {active_chunk}...")
-    for _ in tqdm(range(4 * generate_data.GAMES_PER_CHUNK)):
+    GAMES_TO_PARSE = 4 * generate_data.GAMES_PER_CHUNK
+    if os.getenv("GENERATE_DATA_IGNORE_DOWNLOAD"):
+        GAMES_TO_PARSE = 11348506
+        
+    for _ in tqdm(range(GAMES_TO_PARSE)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:

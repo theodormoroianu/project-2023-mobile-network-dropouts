@@ -1,23 +1,14 @@
-// TODO: implement this
-import { Card, Elevation, RadioGroup, Radio, Slider } from "@blueprintjs/core";
-import { Dispatch, SetStateAction, useState } from "react";
 import { EloBucketStats } from "../api/elo_bucket_stats_api";
 import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
-import { rgb } from "d3";
 import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Scatter,
-  ScatterChart,
-  Tooltip,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
-  ZAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
 
 const RatingScatter = ({ eloBucketStats }: IndividualPlayerStatsProps) => {
@@ -38,27 +29,34 @@ const RatingScatter = ({ eloBucketStats }: IndividualPlayerStatsProps) => {
 
   let data: any[] = [];
   ratingMap.forEach((rating, date) => {
-    data.push({ x: date.toLocaleDateString("en-UK"), y: rating });
+    data.push({ name: date.toLocaleDateString("en-UK"), rating: rating });
   });
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <ScatterChart
+      <LineChart
+        width={500}
+        height={300}
+        data={data}
         margin={{
-          top: 20,
-          right: 20,
-          bottom: 20,
+          top: 5,
+          right: 30,
           left: 20,
+          bottom: 5,
         }}
       >
-        <CartesianGrid />
-        <XAxis type="category" dataKey="x" name="date" />
-        <YAxis type="number" dataKey="y" name="ELO" />
-        <ZAxis type="number" range={[100]} />
-        <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
         <Legend />
-        <Scatter name="Rating Change" data={data} fill="#8884d8" line />
-      </ScatterChart>
+        <Line
+          type="monotone"
+          dataKey="rating"
+          stroke="#8884d8"
+          activeDot={{ r: 8 }}
+        />
+      </LineChart>
     </ResponsiveContainer>
   );
 };

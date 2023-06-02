@@ -10,7 +10,6 @@ import storage
 
 def start_flask_app():
     print(f"Starting flask app...")
-    load_dotenv(verbose=True)
 
     # disable flask warnings
     cli = sys.modules['flask.cli']
@@ -25,6 +24,7 @@ def start_flask_app():
     )
 
 def main():
+    load_dotenv(verbose=True)
     parser = argparse.ArgumentParser(
         prog='ChessViz Backend',
         description='Run the ChessViz backend.'
