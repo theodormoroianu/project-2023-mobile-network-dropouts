@@ -316,7 +316,7 @@ def compute_stats_for_chunk(chunks: list[str]):
     db = open(active_chunk, "r")
 
     print(f"Parsing chunk {active_chunk}...")
-    for _ in tqdm(range(generate_data.GAMES_PER_CHUNK // 3)):
+    for _ in tqdm(range(4 * generate_data.GAMES_PER_CHUNK)):
         game = pgn.read_game(db)
         # finished reading the chunk
         if game is None:
