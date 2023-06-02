@@ -30,10 +30,10 @@ MAXIMUM_OPENINGS_CAPPED = 30
 MAXIMUM_TIMECONTROLS = 5
 
 # Proportion of games we compute the moves of, for heatmaps
-PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP = 0.2
+PROBABILITY_COMPUTE_ALL_MOVES_FOR_HEATMAP = 0.1
 
 # Probability of tracking a player's games
-PROBABILITY_TRACK_PLAYER = 0.3
+PROBABILITY_TRACK_PLAYER = 0.1
 
 def generate_game_fens(game) -> List[str]:
     fens = []
