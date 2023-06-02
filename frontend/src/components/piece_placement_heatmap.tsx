@@ -45,12 +45,12 @@ const Heatmap = ({
     const x2 = mostFreqPos;
     const y2 = 1;
 
-    const b = Math.log((y1 / y2)) / (x1 - x2);
+    const b = Math.log(y1 / y2) / (x1 - x2);
     const a = y2 / Math.exp(b * x2);
 
     // return a * Math.exp(b * x);
     return x / mostFreqPos;
-  }
+  };
 
   let series = heatmapData?.map((row, index) => {
     return {
