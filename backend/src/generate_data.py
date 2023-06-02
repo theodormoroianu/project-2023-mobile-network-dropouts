@@ -65,6 +65,10 @@ def download_and_split_dataset():
     and splits it into "chunks", each containing at most {GAMES_PER_CHUNK} games.
     This split allows for a paralel parsing of the files.
     """
+    # if data is not empty, we assume we don't have to download.
+    if os.getenv("GENERATE_DATA_IGNORE_DOWNLOAD") is not None:
+        return
+    
     os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 
     # check if we have chunks inside
