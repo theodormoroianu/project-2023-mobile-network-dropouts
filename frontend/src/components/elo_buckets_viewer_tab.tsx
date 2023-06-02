@@ -6,13 +6,13 @@ import {
   FetchEloBucketStats,
 } from "../api/elo_bucket_stats_api";
 import { FetchEloBucketList } from "../api/elo_bucket_stats_api";
-import { PieCharViewer } from "./pie_chart_viewer";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { rgb } from "d3";
-import { ChessBoardFenExplorer } from "./chessboard";
 import PiecesPositionsHeatmap from "./piece_placement_heatmap";
 import IndividualPlayerStats from "./individual_player_stats";
+import OpeningsChart from "./openings_chart";
+import PlayersVictoryHeatmap from "./players_victory_heatmap";
+import { ChessBoardFenExplorer } from "./chessboard";
 
 interface GeneralInformationStats {
   eloBucketStats: EloBucketStats | null;
@@ -30,6 +30,18 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
     );
   });
 
+  let ordered_openings: [number, string][] = [];
+  eloBucketStats?.most_used_openings_and_frq?.forEach((value, key) => {
+    ordered_openings.push([value.nr_games, key]);
+  });
+
+  ordered_openings.sort((a, b) => a[0] - b[0]).reverse();
+  console.log(ordered_openings);
+
+  let top_openings: string[] = ["Opening 1", "Opening 2", "Opening 3"];
+  for (let i = 0; i < Math.min(3, ordered_openings.length); i++)
+    top_openings[i] = ordered_openings[i][1];
+
   let options: ApexOptions = {
     chart: {
       height: 600,
@@ -46,17 +58,8 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
           background: "transparent",
           image: undefined,
         },
-        dataLabels: {
-          //   name: {
-          //     show: false,
-          //   },
-          //   value: {
-          //     show: false,
-          //   }
-        },
       },
     },
-    // colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5', "#0077B5"],
     labels: Array.from(
       eloBucketStats?.most_used_timecontrols_and_frq.keys() ?? []
     ),
@@ -74,9 +77,6 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
       markers: {
         radius: 0,
       },
-      //   formatter: function(seriesName, opts) {
-      //     return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
-      //   },
       itemMargin: {
         vertical: 3,
       },
@@ -93,207 +93,99 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
     ],
   };
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        width: "70%",
-      }}
-    >
+    <div style={{ marginTop: "-30px" }}>
+      <h1 className={"bp4-monospace-text"} style={{ textAlign: "center" }}>
+        Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}
+      </h1>
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          width: "70%",
+          flexDirection: "row",
+          width: "100%",
+          textAlign: "center",
         }}
       >
-        <div style={{ width: "70%", paddingBottom: "10px" }}>
-          <h2 className={"bp4-monospace-text"}>
-            Elo Bucket {eloBucketStats?.elo_min} - {eloBucketStats?.elo_max}
-          </h2>
-        </div>
-        <div style={{ width: "70%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <h2>Time control frequency</h2>
           <div style={{ width: "100%" }}>
-            {/* @ts-ignore */}
-            <ReactApexChart
-              options={options}
-              /* @ts-ignore */
-              series={series}
-              type="radialBar"
-              height={350}
-              width={350}
+            <div style={{ marginLeft: "55px", marginTop: "30px" }}>
+              {/* @ts-ignore */}
+              <ReactApexChart
+                options={options}
+                /* @ts-ignore */
+                series={series}
+                type="radialBar"
+                height={350}
+                width={350}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ width: "100%", paddingBottom: "10px" }}>
+            <h2>Number of Games</h2>
+            <h1 style={{ color: "#e85d04", marginTop: "-20px" }}>
+              {eloBucketStats?.total_nr_games_in_elo_bucket}
+            </h1>
+            <h2>Number of Players</h2>
+            <h1 style={{ color: "#a672a0", marginTop: "-20px" }}>
+              {eloBucketStats?.nr_of_players}
+            </h1>
+            <h2>Average Lenght of Game in moves</h2>
+            <h1 style={{ color: "#85842e", marginTop: "-20px" }}>
+              {Number(eloBucketStats?.average_length).toPrecision(4)}
+            </h1>
+          </div>
+          <h2>Frequent Openings</h2>
+          <div
+            style={{
+              textAlign: "left",
+              alignSelf: "center",
+              wordWrap: "break-word",
+              width: "250px",
+              paddingLeft: "30px",
+            }}
+          >
+            <h3 style={{ color: "#f24236" }}>1. &nbsp; {top_openings[0]}</h3>
+            <h3 style={{ color: "#2e86ab" }}>2. &nbsp; {top_openings[1]}</h3>
+            <h3 style={{ color: "#2f8d6b" }}>3. &nbsp; {top_openings[2]}</h3>
+            {/* {top_openings.map((opening, index) => <h3>{index + 1}. {opening}</h3>)}  */}
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <h2>Representantive Player</h2>
+          <h2 style={{ color: "#296eb4", marginTop: "-15px" }}>
+            {eloBucketStats?.individual_player_stats[0][0]}
+          </h2>
+          <h2>Sample Game in this ELO bucket</h2>
+          <div style={{ marginTop: "-70px" }}>
+            <ChessBoardFenExplorer
+              fensToDisplay={Promise.resolve([eloBucketStats?.sample_game!, 0])}
+              showNonIdealStateIfEmpty={false}
             />
           </div>
         </div>
-      </div>
-      <div style={{ width: "50%" }}>
-        <h3 className={"bp4-monospace-text"}>Frequent Openings</h3>
-        <br></br>
-      </div>
-    </div>
-  );
-};
-
-interface PlayersVictoryHeatmapStats {
-  eloBucketStats: EloBucketStats | null;
-}
-const PlayersVictoryHeatmap = ({
-  eloBucketStats,
-}: PlayersVictoryHeatmapStats) => {
-  // fens to display in the attached chessboard view
-  const [fensToDisplay, setFensToDisplay] = useState<
-    Promise<[string[], number]>
-  >(new Promise(() => [[], 0]));
-
-  const [gameMsg, setGameMsg] = useState("Demo game");
-
-  if (eloBucketStats === null || eloBucketStats === undefined)
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    );
-
-  let series = eloBucketStats.games_won_heatmap.map((row, index) => {
-    return {
-      name: `ELO between ${eloBucketStats.elo_min + index * 10} and ${
-        eloBucketStats.elo_min + index * 10 + 9
-      }`,
-      data: row.map(
-        (item) =>
-          Math.round(
-            (item.games_won / Math.max(1, item.games_won + item.games_lost)) *
-              100
-          ) / 100
-      ),
-    };
-  });
-  series.reverse();
-
-  let options: ApexOptions = {
-    plotOptions: {
-      heatmap: {
-        radius: 0,
-        colorScale: {
-          ranges: Array(100)
-            .fill(0)
-            .map((_, id) => {
-              return {
-                from: 0.4 + id / 500,
-                to: 0.4 + (id + 1) / 500,
-                name: `range-${id}`,
-                color: rgb(255 - 2.55 * id, 255 - 2.55 * id, 255).formatHex(),
-              };
-            })
-            .concat([
-              {
-                from: 0,
-                to: 0.4,
-                name: `range-0`,
-                color: rgb(240, 240, 255).formatHex(),
-              },
-              {
-                from: 0.6,
-                to: 1,
-                name: `range-1`,
-                color: rgb(0, 0, 255).formatHex(),
-              },
-            ]),
-        },
-      },
-    },
-    chart: {
-      toolbar: {
-        show: false,
-      },
-      height: 350,
-      type: "heatmap",
-      zoom: {
-        enabled: false,
-      },
-      events: {
-        click(e, chart, options) {
-          const row = options.seriesIndex,
-            column = options.dataPointIndex;
-          console.log(options);
-          console.log(row, column);
-          if (row !== -1) {
-            setFensToDisplay(
-              Promise.resolve([
-                eloBucketStats.games_won_heatmap[9 - row][column].sample_game,
-                0,
-              ])
-            );
-            let y_axis = eloBucketStats.elo_min + (9 - row) * 10;
-            let x_axis = eloBucketStats.elo_min + column * 10;
-            let range_0 = y_axis.toString() + "-" + (y_axis + 9).toString();
-            let range_1 = x_axis.toString() + "-" + (x_axis + 9).toString();
-            setGameMsg("ELO Of " + range_0 + " Vs ELO Of " + range_1);
-          }
-        },
-      },
-    },
-    legend: {
-      show: false,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    xaxis: {
-      type: "category",
-      categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(
-        (index) =>
-          `ELO between ${eloBucketStats.elo_min + index * 10} and ${
-            eloBucketStats.elo_min + index * 10 + 9
-          }`
-      ),
-      tickAmount: eloBucketStats.games_won_heatmap.length,
-      axisTicks: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-    },
-    grid: {
-      show: false,
-    },
-    colors: ["#008FFF"],
-    title: {
-      text: "Player Victory Rate By ELO Rating",
-      align: "right",
-    },
-  };
-
-  return (
-    <div
-      style={{
-        // "padding": "30px",
-        // "padding-top"
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
-        height: "100%",
-      }}
-    >
-      <div style={{ width: "60%" }}>
-        {/* @ts-ignore */}
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="heatmap"
-          height={600}
-          width={700}
-        />
-      </div>
-      <div style={{ width: "35%", position: "relative", top: "-50px" }}>
-        <ChessBoardFenExplorer
-          fensToDisplay={fensToDisplay}
-          showNonIdealStateIfEmpty={true}
-          my_title="Please select a Square."
-          my_description="To view the chessboard, please click on the Square entry from the Heatmap."
-          chessboard_title={gameMsg}
-        />
       </div>
     </div>
   );
@@ -302,69 +194,6 @@ const PlayersVictoryHeatmap = ({
 interface EloBucketViewerProps {
   eloBucket: number;
 }
-
-interface OpeningsChartStats {
-  eloBucketStats: EloBucketStats | null;
-}
-const OpeningsChart = ({ eloBucketStats }: OpeningsChartStats) => {
-  const [fensToDisplay, setFensToDisplay] = useState<
-    Promise<[string[], number]>
-  >(new Promise(() => [[], 0]));
-  let stats_data = eloBucketStats?.most_used_openings_and_frq;
-  let data: { name: string; value: number; sample_game: string[] }[] = [];
-  stats_data?.forEach((value, key) => {
-    data.push({
-      name: key,
-      value: value.nr_games,
-      sample_game: value.sample_game,
-    });
-  });
-
-  const [selectedOpening, setSelectedOpening] = useState(0);
-
-  // let [index, setIndex] = useState(0);
-  // let pie_chart_data = data.map(d => ({ name: d.name, value: d.value }));
-  return (
-    <div
-      style={{
-        display: "flex",
-        height: "100%",
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
-      <div
-        style={{
-          width: "60%",
-          height: "100%",
-          alignSelf: "flex-start",
-        }}
-      >
-        <PieCharViewer
-          data={data}
-          setFensToDisplay={setFensToDisplay}
-          selectedOpening={selectedOpening}
-          setSelectedOpening={setSelectedOpening}
-        />
-      </div>
-      <div
-        style={{
-          width: "35%",
-          height: "100%",
-        }}
-      >
-        <ChessBoardFenExplorer
-          fensToDisplay={fensToDisplay}
-          showNonIdealStateIfEmpty={true}
-          my_title="Please select an Opening."
-          my_description="To view the chessboard, please click on the apropriate Opening entry from the Pie Chart."
-          chessboard_title={data[selectedOpening].name}
-        />
-      </div>
-    </div>
-  );
-};
 
 /** Shows statistics about a SINGLE elo range */
 const EloBucketViewer = ({ eloBucket }: EloBucketViewerProps) => {

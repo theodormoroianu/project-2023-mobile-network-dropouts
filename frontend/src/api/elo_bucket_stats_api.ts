@@ -63,6 +63,7 @@ export interface EloBucketStats {
   games_won_heatmap: GamesWonHeatmapType;
   pieces_pos_heatmap: PiecesPosHeatmapType;
   individual_player_stats: PlayerStatsType;
+  nr_of_players: number;
 }
 
 /** Given a bucket ID (which is usually the minimal elo / 100),
