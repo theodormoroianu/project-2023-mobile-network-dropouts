@@ -25,7 +25,7 @@ const Title = () => {
             alignSelf: "center",
           }}
         >
-          Average Length Of Chess Games
+          The Game Of Chess
         </h1>
         <p
           style={{
@@ -49,16 +49,13 @@ const Title = () => {
 const Content = () => {
   const s = [
     "## Introduction",
-    "**TODO**",
-    //   "_*Chess Visualizer*_ is a tool for visualizing data about chess games. This data includes:",
-    //   " * The average ELO of online players.\n * The average length of games (by number of moves).\n" +
-    //     " * Various statistics generated independently for multiple _ELO ranges_ (i.e. various skill level).",
-    //   "## Who is part of the target audience?",
-    //   "**Short answer:** Anybody.",
-    //   "**Long answer:** Someone looking to improve their chess level, by analysing how players of various skills tackle games, including data such as the most frequent openings played for each skill level, sample games visualized on an interactive board, or how games played between players of slightly different skill usually end.",
-    //   "## Origin of the data",
-    //   "All of the analized data comes from [lichess](https://lichess.org), a free-to-play, open-source and multiplayer chess website, where users of any skill from all around the world play together.",
-    //   "In April 2023 alone, `101,706,224` games were played on _lichess_ (or roughly `40` new games per second), all of which are publicly available to download on their [database page](https://database.lichess.org/).",
+    "The game of chess is one of the most popular games of the world.",
+    "It is played on an 8x8 grid of alternating white and black squares, called a __chessboard__. Each of the two players controls an army of white, respectively black pieces which they play alternatively, the role of the game being to capture the adversary's king.",
+    "## History",
+    "The earliest record of a game similar game is of the game of __Chaturanga__, with records showing it existed in India all the way back to the seventh century.",
+    "The modern chess rules were laid out during the 15th century in Europe, and standardized around 1800.",
+    "## Game Theory And Computational Complexity",
+    "Chess is a game where all information is public (there is no information hidden from any of the players), does not involve any element of chance (such as dicerolls or deck suffles), and there are an estimated 10 billion gogols possible different games, without any provable optimal strategy. This makes chess an interesting strategy game, for both human players and AI agents.",
   ];
 
   return (

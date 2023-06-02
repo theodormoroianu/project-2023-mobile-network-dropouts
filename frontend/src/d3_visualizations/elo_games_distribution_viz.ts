@@ -32,7 +32,7 @@ export const EloGamesDistributionViz = (
         .attr("x", 50)
         .attr("y", 50)
         .attr("font-size", "24px")
-        .text("Basic ELO Stats");
+        .text("ELO Rating Distribution Of Chess Players");
 
       var xScale = d3.scaleBand().range([0, width]).padding(0.2),
         yScale = d3.scaleLinear().range([height, 0]);
@@ -88,14 +88,16 @@ export const EloGamesDistributionViz = (
         .on("click", (event: any, obj: BasicEloGameStat) => {
           console.log("Clicked!", obj);
           setFens(Promise.resolve([obj.sample_game, 0]));
-          setChessboardTitle(`Sample game for ${obj.elo_min} - ${obj.elo_max}`);
+          setChessboardTitle(
+            `Sample Game For ELOs of ${obj.elo_min} - ${obj.elo_max}`
+          );
         })
         .on(
           "mouseover",
           function (this: SVGRectElement, event: any, obj: BasicEloGameStat) {
             d3.select(this)
               .style("stroke", "black")
-              .attr("fill", "rgb(127, 198, 224)");
+              .attr("fill", "rgb(102, 184, 255)");
           }
         )
         .on(

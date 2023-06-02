@@ -34,7 +34,7 @@ export const AverageGameLengthHistViz = (
         .attr("x", 50)
         .attr("y", 50)
         .attr("font-size", "24px")
-        .text("Average Game Length Stats");
+        .text("Average Number Of Moves In A Chess Game");
 
       var xScale = d3.scaleBand().range([0, width]).padding(0.2),
         yScale = d3.scaleLinear().range([height, 0]);

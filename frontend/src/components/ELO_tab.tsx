@@ -25,7 +25,7 @@ const Title = () => {
             alignSelf: "center",
           }}
         >
-          ELO Of Players On Lichess
+          ELO Rating Of Players On Lichess
         </h1>
         <p
           style={{
@@ -37,9 +37,10 @@ const Title = () => {
             fontFamily: "Trebuchet MS",
           }}
         >
-          The level of a player in chess is measured my his/her ELO. You can see
-          the typical ELO of players, together with a game played by them in the
-          graph below.
+          The level of a player is measured my his/her ELO, a rating system used
+          in many zero-sum games including chess, pool or table tennis. You can
+          see the typical ELO of players, together with a game played by them in
+          the graph below.
         </p>
       </div>
     </>
@@ -48,17 +49,16 @@ const Title = () => {
 
 const Content = () => {
   const s = [
-    "## Introduction",
-    "**TODO**",
-    //   "_*Chess Visualizer*_ is a tool for visualizing data about chess games. This data includes:",
-    //   " * The average ELO of online players.\n * The average length of games (by number of moves).\n" +
-    //     " * Various statistics generated independently for multiple _ELO ranges_ (i.e. various skill level).",
-    //   "## Who is part of the target audience?",
-    //   "**Short answer:** Anybody.",
-    //   "**Long answer:** Someone looking to improve their chess level, by analysing how players of various skills tackle games, including data such as the most frequent openings played for each skill level, sample games visualized on an interactive board, or how games played between players of slightly different skill usually end.",
-    //   "## Origin of the data",
-    //   "All of the analized data comes from [lichess](https://lichess.org), a free-to-play, open-source and multiplayer chess website, where users of any skill from all around the world play together.",
-    //   "In April 2023 alone, `101,706,224` games were played on _lichess_ (or roughly `40` new games per second), all of which are publicly available to download on their [database page](https://database.lichess.org/).",
+    "## History",
+    "The ELO system was introduced aroung 1960. Despite common belief, ELO is not an acronym, but rather comes from its creator Arpad Elo. It was devised as an improvement over the older Harkness system, used between 1950 and 1960.",
+    "## The idea behind ELO",
+    "The ELO rating system offers a statistical measurement of the relative skill of players, using a zero-sum, self-correcting scoring system.",
+    "The main idea behind the ELO system is that each player's skill level can be represented as a normal distribution, the ELO rating ideally representing the mean of the distribution. Such a model allows to easily compute the odds of the possible outcomes between two players.",
+    "## How ELO Works",
+    "The ELO system is quite simple:",
+    " * A new player receives a pre-set rating, which usually depends on the rating maintainer (for instance, [lichess](https://lichess.org/) gives new users an ELO of 1500, while [chess.com](https://chess.com) gives new users an ELO of 1200).\n" +
+      ' * When two oponents play, the winner "takes" points (as ELO is a zero-sum game the points are transfered from the winner to the looser). The easier the victory was (if the winner has a high rating), the less points are transfered from the looser to the winner.',
+    "Over time, each player's rating should converge to their __real__ skill level.",
   ];
 
   return (
