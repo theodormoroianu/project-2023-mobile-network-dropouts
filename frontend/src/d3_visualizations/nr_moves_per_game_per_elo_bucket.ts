@@ -24,10 +24,10 @@ export const NrMovesPerGamePerEloBucket = (
     .attr("x", 50)
     .attr("y", 50)
     .attr("font-size", "24px")
-    .text("Number of moves histogram");
+    .text("Histogram Of The Number Of Moves");
   svg
     .append("text")
-    .attr("transform", "translate(100,0)")
+    .attr("transform", "translate(130,0)")
     .attr("x", 110)
     .attr("y", 75)
     .attr("font-size", "20px")

@@ -33,7 +33,7 @@ function Root() {
           <Button
             className={Classes.MINIMAL}
             icon="comparison"
-            text="History of Chess"
+            text="Game Of Chess"
             onClick={() => setView("average_game_length_his_viz")}
             active={view === "average_game_length_his_viz"}
           />

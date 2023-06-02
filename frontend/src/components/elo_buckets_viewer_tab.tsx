@@ -1,11 +1,4 @@
-import {
-  Card,
-  Elevation,
-  NonIdealState,
-  Tab,
-  Tabs,
-  Checkbox,
-} from "@blueprintjs/core";
+import { NonIdealState, Tab, Tabs } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
 import {
   EloBucketList,
@@ -235,7 +228,7 @@ const PlayersVictoryHeatmap = ({
             let x_axis = eloBucketStats.elo_min + column * 10;
             let range_0 = y_axis.toString() + "-" + (y_axis + 9).toString();
             let range_1 = x_axis.toString() + "-" + (x_axis + 9).toString();
-            setGameMsg(range_0 + " vs " + range_1);
+            setGameMsg("ELO Of " + range_0 + " Vs ELO Of " + range_1);
           }
         },
       },
@@ -267,7 +260,7 @@ const PlayersVictoryHeatmap = ({
     },
     colors: ["#008FFF"],
     title: {
-      text: "Player Victory By ELO Intervals",
+      text: "Player Victory Rate By ELO Rating",
       align: "right",
     },
   };
@@ -441,7 +434,7 @@ export const EloBucketsViewer = () => {
     FetchEloBucketList().then(setEloBuckets);
   }, []);
 
-  if (eloBuckets === null) return <p>Not loaded!</p>;
+  if (eloBuckets === null) return <div></div>;
 
   return (
     <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
