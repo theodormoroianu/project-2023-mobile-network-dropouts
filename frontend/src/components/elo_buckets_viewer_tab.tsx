@@ -175,7 +175,7 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
           }}
         >
           <h2>Representantive Player</h2>
-          <h2 style={{ color: "#296eb4", marginTop: "-15px" }}>
+          <h2 style={{ color: "#136f63", marginTop: "-15px" }}>
             {eloBucketStats?.individual_player_stats[0][0]}
           </h2>
           <h2>Sample Game in this ELO bucket</h2>
