@@ -76,7 +76,7 @@ export const NrMovesPerGamePerEloBucket = (
     .append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
-    .attr("dy", "-7.1em")
+    .attr("dy", "-8.1em")
     .attr("text-anchor", "end")
     .attr("stroke", "black")
     .text("Average Number of moves per game");
