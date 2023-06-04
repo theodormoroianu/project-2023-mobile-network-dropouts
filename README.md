@@ -283,9 +283,9 @@ visualization/widgets.
 
 These are the following steps to run the project:
 1. Clone the repository.
-2. Generate the backend data, by running in the backend folder:
+2. Run the API:
     - `$ cd backend/`
-    - `python src/main.py generate-and-run`
+    - `python src/main.py run-api`
 3. Start the frontend server, by running:
     - `$ cd frontend/`
     - `$ npm i`
@@ -293,7 +293,10 @@ These are the following steps to run the project:
 
 The app should then be accessible on [http://localhost:3000/](http://localhost:3000/).
 
-Alternatively, the app is deployed [here](http://158.178.201.114/).
+Alternatively, the app is deployed [here](http://preausor.cf/).
+
+Please note that if you opt on running the app locally, you will be contrained to only a subset of the dataset.
+If you wish to use all of the data, run `python src/main.py generate-data` before starting the API.
 
 ## Milestone 3 (4th June, 5pm)
 
