@@ -157,7 +157,7 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
               {eloBucketStats?.individual_player_stats[0][0]}
             </h1>
           </div>
-          <h2 style={{ marginTop: "-5px" }}>Frequent Openings</h2>
+          <h2 style={{ marginTop: "-5px" }}>Top Played Openings</h2>
           <div
             style={{
               textAlign: "left",
