@@ -300,15 +300,15 @@ If you wish to use all of the data, run `python src/main.py generate-data` befor
 
 ## Milestone 3 (4th June, 5pm)
 
-Dataset https://database.lichess.org/. Games from April 2017.
+**80% of the final grade**
+
+The used dataset is available [here](https://database.lichess.org/). We are using the games from April 2017. 
 
 The project is live [here](http://preausor.cf/).
 
-The screencast can be found [here](Milestone\3.pdf).
+The screencast can be found [here](Milestone%203.pdf).
 
 The process book can be found [here](MobileNetworksDropouts_Screencast.mkv).
-
-**80% of the final grade**
 
 
 ## Late policy
