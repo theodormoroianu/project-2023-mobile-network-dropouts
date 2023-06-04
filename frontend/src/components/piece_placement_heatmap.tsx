@@ -35,7 +35,7 @@ const Heatmap = ({
 
   let heatmapData = obtainHeatmapData(playerColor, pieceType, moveNo);
   let mostFreqPos = Math.max(
-    ...(heatmapData??[[]]).reduce((acc, row) => acc.concat(row))
+    ...(heatmapData ?? [[]]).reduce((acc, row) => acc.concat(row))
   );
 
   const scale = (x: number) => {
@@ -59,11 +59,11 @@ const Heatmap = ({
     };
   });
   if (series === undefined) {
-    series = []
+    series = [];
     for (let i = 0; i < 8; i++) {
       series.push({
-        name: `${8-i}`,
-        data: [0, 0, 0, 0, 0, 0, 0, 0]
+        name: `${8 - i}`,
+        data: [0, 0, 0, 0, 0, 0, 0, 0],
       });
     }
   }

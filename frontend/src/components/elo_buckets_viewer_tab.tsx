@@ -122,7 +122,7 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
                 /* @ts-ignore */
                 series={series}
                 type="radialBar"
-                height={350}
+                height={400}
                 width={350}
               />
             </div>
@@ -136,33 +136,64 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
             textAlign: "center",
           }}
         >
-          <div style={{ width: "100%", paddingBottom: "10px" }}>
+          <div style={{ width: "100%", paddingBottom: "5px" }}>
             <h2>Number of Games</h2>
             <h1 style={{ color: "#e85d04", marginTop: "-20px" }}>
               {eloBucketStats?.total_nr_games_in_elo_bucket}
             </h1>
-            <h2>Number of Players</h2>
+            <h2 style={{ paddingTop: "5px" }}>Number of Players</h2>
             <h1 style={{ color: "#a672a0", marginTop: "-20px" }}>
               {eloBucketStats?.nr_of_players}
             </h1>
-            <h2>Average Lenght of Game in moves</h2>
+            <h2 style={{ paddingTop: "5px" }}>
+              Average Lenght of Game in moves
+            </h2>
             <h1 style={{ color: "#85842e", marginTop: "-20px" }}>
               {Number(eloBucketStats?.average_length).toPrecision(4)}
             </h1>
+
+            <h2>Representantive Player</h2>
+            <h1 style={{ color: "#136f63", marginTop: "-20px" }}>
+              {eloBucketStats?.individual_player_stats[0][0]}
+            </h1>
           </div>
-          <h2>Frequent Openings</h2>
+          <h2 style={{ marginTop: "-5px" }}>Frequent Openings</h2>
           <div
             style={{
               textAlign: "left",
               alignSelf: "center",
               wordWrap: "break-word",
-              width: "250px",
-              paddingLeft: "30px",
+              width: "80%",
+              paddingLeft: "70px",
             }}
           >
-            <h3 style={{ color: "#f24236" }}>1. &nbsp; {top_openings[0]}</h3>
-            <h3 style={{ color: "#2e86ab" }}>2. &nbsp; {top_openings[1]}</h3>
-            <h3 style={{ color: "#2f8d6b" }}>3. &nbsp; {top_openings[2]}</h3>
+            <h3
+              style={{
+                color: "#f24236",
+                position: "relative",
+                marginTop: "-10px",
+              }}
+            >
+              1. &nbsp; {top_openings[0]}
+            </h3>
+            <h3
+              style={{
+                color: "#2e86ab",
+                position: "relative",
+                marginTop: "-10px",
+              }}
+            >
+              2. &nbsp; {top_openings[1]}
+            </h3>
+            <h3
+              style={{
+                color: "#2f8d6b",
+                position: "relative",
+                marginTop: "-10px",
+              }}
+            >
+              3. &nbsp; {top_openings[2]}
+            </h3>
             {/* {top_openings.map((opening, index) => <h3>{index + 1}. {opening}</h3>)}  */}
           </div>
         </div>
@@ -174,10 +205,6 @@ const GeneralInformation = ({ eloBucketStats }: GeneralInformationStats) => {
             textAlign: "center",
           }}
         >
-          <h2>Representantive Player</h2>
-          <h2 style={{ color: "#136f63", marginTop: "-15px" }}>
-            {eloBucketStats?.individual_player_stats[0][0]}
-          </h2>
           <h2>Sample Game in this ELO bucket</h2>
           <div style={{ marginTop: "-70px" }}>
             <ChessBoardFenExplorer
