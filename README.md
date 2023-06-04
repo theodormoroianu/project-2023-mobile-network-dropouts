@@ -300,6 +300,8 @@ If you wish to use all of the data, run `python src/main.py generate-data` befor
 
 ## Milestone 3 (4th June, 5pm)
 
+Dataset https://database.lichess.org/. Games from April 2017. 
+
 **80% of the final grade**
 
 
