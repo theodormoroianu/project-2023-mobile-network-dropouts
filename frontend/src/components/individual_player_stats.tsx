@@ -93,8 +93,8 @@ const WinRate = ({ noWins, noLoses, noDraws, color }: WinRateProps) => {
 
   return (
     <div style={{}}>
-      {color === "all" && <h4>All games</h4>}
-      {color !== "all" && <h4>Games with {color}</h4>}
+      {color === "all" && <h4 style={{marginLeft: "110px"}}>All games</h4>}
+      {color !== "all" && <h4 style={{marginLeft: "90px"}}>Games with {color}</h4>}
       {/* @ts-ignore */}
       <ReactApexChart
         /* @ts-ignore */
@@ -200,9 +200,24 @@ const IndividualPlayerStats = ({
           justifyContent: "space-evenly",
         }}
       >
-        <h2>Player username: {playerName}</h2>
-        <h2>Average oponent rating: {averageOponentRating}</h2>
-        <h2>Total number of games: {stats.length}</h2>
+        <div style={{display: "flex", justifyContent: "space-evenly", marginLeft: "60px"}}>
+          <h2>Player username:</h2> 
+          <h2 style={{ color: "#0b06a9", marginLeft: "10px" }}>
+            {playerName}
+          </h2>
+        </div> 
+        <div style={{display: "flex", justifyContent: "space-evenly"}}>
+          <h2>Average oponent rating:</h2> 
+          <h2 style={{ color: "#df2935", marginLeft: "10px"  }}>
+            {averageOponentRating}
+          </h2>
+        </div>
+        <div style={{display: "flex", justifyContent: "space-evenly"}}>
+          <h2>Total number of games:</h2> 
+          <h2 style={{ color: "#29BA48", marginLeft: "10px"  }}>
+            {stats.length}
+          </h2>
+        </div>
       </div>
       <div
         style={{

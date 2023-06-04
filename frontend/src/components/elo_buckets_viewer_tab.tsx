@@ -256,7 +256,7 @@ const EloBucketViewer = ({ eloBucket }: EloBucketViewerProps) => {
         />
         <Tab
           id={"specific-player-stats"}
-          title={"Player stats of a representative player"}
+          title={"Representantive player evolution"}
         />
       </Tabs>
       <div style={{ paddingTop: "30px", width: "100%", height: "100%" }}>
