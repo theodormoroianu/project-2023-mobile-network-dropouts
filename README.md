@@ -306,9 +306,9 @@ The used dataset is available [here](https://database.lichess.org/). We are usin
 
 The project is live [here](http://preausor.cf/).
 
-The screencast can be found [here](Milestone%203.pdf).
+The screencast can be found [here](MobileNetworksDropouts_Screencast.mkv).
 
-The process book can be found [here](MobileNetworksDropouts_Screencast.mkv).
+The process book can be found [here](Milestone%203.pdf).
 
 
 ## Late policy
