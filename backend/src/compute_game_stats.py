@@ -317,7 +317,7 @@ def compute_stats_for_chunk(chunks: list[str]):
     db = open(active_chunk, "r")
 
     print(f"Parsing chunk {active_chunk}...")
-    GAMES_TO_PARSE = 4 * generate_data.GAMES_PER_CHUNK
+    GAMES_TO_PARSE = 11348506
     if os.getenv("GENERATE_DATA_IGNORE_DOWNLOAD"):
         GAMES_TO_PARSE = 11348506
         
