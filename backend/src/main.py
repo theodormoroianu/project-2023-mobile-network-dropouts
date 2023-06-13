@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 import os
 from dotenv import load_dotenv
 import api
@@ -15,9 +15,23 @@ def start_flask_app():
     cli = sys.modules['flask.cli']
     cli.show_server_banner = lambda *x: None
 
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        static_folder="../frontend/build"
+    )
+
+    @app.route('/<path:path>')
+    def serve_static(path):
+        print("Got here!")
+        print("Got here!, ", path)
+        return send_from_directory('../../frontend/build/', path)
+    
     app.register_blueprint(api.api, url_prefix='/api')
 
+    @app.route("/")
+    def serve_index():
+        return send_from_directory('../../frontend/build/', "index.html")
+    
     app.run(
         host=os.getenv("BACKEND_HOST"),
         port=os.getenv("BACKEND_PORT")
