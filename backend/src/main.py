@@ -22,8 +22,6 @@ def start_flask_app():
 
     @app.route('/<path:path>')
     def serve_static(path):
-        print("Got here!")
-        print("Got here!, ", path)
         return send_from_directory('../../frontend/build/', path)
     
     app.register_blueprint(api.api, url_prefix='/api')
