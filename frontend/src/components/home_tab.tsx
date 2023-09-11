@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useEffect } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -40,7 +40,9 @@ export const Map = memo(() => {
   const [countryCodeToRating, setCountryCodeToRating] =
     useState<DSVRowArray<string>>();
 
-  csv(countryCodeToRatingURL).then(setCountryCodeToRating);
+  useEffect(() => {
+    csv(countryCodeToRatingURL).then(setCountryCodeToRating);
+  }, []);
 
   return (
     <div>
