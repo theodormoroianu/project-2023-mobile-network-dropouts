@@ -7,6 +7,7 @@ import sys
 import generate_data
 import shutil
 import storage
+import dump_data
 
 def start_flask_app():
     print(f"Starting flask app...")
@@ -44,7 +45,7 @@ def main():
     # clean -> deletes the data/ folder
     # run-api -> runs the Flask API
     # generate-and-run -> generates the data
-    parser.add_argument('command', help="What do do.", choices=["clean", "run-api", "generate-data", "generate-and-run"])
+    parser.add_argument('command', help="What do do.", choices=["clean", "run-api", "generate-data", "generate-and-run", "dump-data"])
     args = parser.parse_args()
 
     # change working dir to backend/ for making file manipulation easier
@@ -52,7 +53,9 @@ def main():
     print(f"Changing project CWD to '{backend_path}'")
     os.chdir(backend_path)
 
-    if args.command in ["generate-data", "generate-and-run"]:
+    if args.command == "dump-data":
+        dump_data.dump_data()
+    elif args.command in ["generate-data", "generate-and-run"]:
         generate_data.generate_data()
         if args.command == "generate-and-run":
             start_flask_app()
