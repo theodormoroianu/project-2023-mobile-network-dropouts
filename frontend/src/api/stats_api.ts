@@ -6,7 +6,7 @@ export interface BasicEloGameStat {
 }
 
 export const FetchBasicEloGameStats = (): Promise<BasicEloGameStat[]> => {
-  return fetch("/api/basic-elo-game-stats")
+  return fetch("api/basic-elo-game-stats")
     .then((response) => response.json())
     .catch((err) => {
       console.log("Unable to fetch basic elo game:");
@@ -24,7 +24,7 @@ export interface AverageGameLengthStat {
 export const FetchAverageGameLengthStats = (): Promise<
   AverageGameLengthStat[]
 > => {
-  return fetch("/api/average-game-length-stats")
+  return fetch("api/average-game-length-stats")
     .then((response) => response.json())
     .catch((err) => {
       console.log("Unable to fetch average length game:");

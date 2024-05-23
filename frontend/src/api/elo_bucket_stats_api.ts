@@ -8,7 +8,7 @@ export type EloBucketList = EloBucketListItem[];
 
 /** Returns the list of buckets the backend can offer */
 export const FetchEloBucketList = (): Promise<EloBucketList> => {
-  return fetch("/api/per-elo-stats/get-elo-buckets")
+  return fetch("api/per-elo-stats/get-elo-buckets")
     .then((response) =>
       response.json().then((eloBucketList) => {
         eloBucketList.sort(
@@ -73,7 +73,7 @@ export interface EloBucketStats {
 export const FetchEloBucketStats = (
   elo_bucket: number
 ): Promise<EloBucketStats> => {
-  return fetch(`/api/per-elo-stats/get-stats/${elo_bucket}`)
+  return fetch(`api/per-elo-stats/get-stats/${elo_bucket}`)
     .then((response) => {
       return response.json().then((data) => {
         data["most_used_openings_and_frq"] = new Map(
