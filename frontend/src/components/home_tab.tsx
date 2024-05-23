@@ -14,8 +14,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export const Map = memo(() => {
-  const geoUrl = "/map/map.json";
-  const countryCodeToRatingURL = "/map/country_code_to_rating.csv";
+  const geoUrl = "map/map.json";
+  const countryCodeToRatingURL = "map/country_code_to_rating.csv";
 
   const colorScale = scaleQuantile<string>()
     .domain([1500, 2800])

@@ -10,7 +10,8 @@
 
 ## Website
 
-The project is live [here](http://preausor.cf/).
+The project is live [here](https://com-480-data-visualization.github.io/project-2023-mobile-network-dropouts/).
+
 
 ## Milestone 1 (7th April, 5pm)
 
